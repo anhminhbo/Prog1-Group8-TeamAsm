@@ -1,5 +1,9 @@
+import UserService.*;
+
+
 public class main {
     public static void main(String[] args) {
-        System.out.println("Hello Khuong");
+        UserService service = new UserService();
+        service.printTest();
     }
 }
