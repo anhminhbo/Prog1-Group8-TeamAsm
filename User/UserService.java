@@ -1,4 +1,4 @@
-package UserService;
+package User;
 
 public class UserService {
     public UserService() {

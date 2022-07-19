@@ -1,4 +1,4 @@
-import UserService.*;
+import User.*;
 
 
 public class main {

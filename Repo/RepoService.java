@@ -1,4 +1,4 @@
-package RepoService;
+package Repo;
 
 public class RepoService {
 }

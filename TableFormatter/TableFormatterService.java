@@ -1,4 +1,4 @@
-package TableFormatterService;
+package TableFormatter;
 
 public class TableFormatterService {
 }
