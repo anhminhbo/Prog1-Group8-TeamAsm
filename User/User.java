@@ -1,6 +1,6 @@
 package User;
 
-public class User extends Customer{
+public class User extends Customer {
     private String userName;
     private String password;
     private String role;
@@ -12,6 +12,7 @@ public class User extends Customer{
         this.role = "member";
         this.memberShip = "UNKNOWN";
     }
+
     public User(String userName, String password, String role, String memberShip) {
         this.userName = userName;
         this.password = password;

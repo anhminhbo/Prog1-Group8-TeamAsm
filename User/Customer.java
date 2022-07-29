@@ -12,6 +12,7 @@ public class Customer {
         this.address = "UNKNOWN";
         this.email = "UNKNOWN";
     }
+
     public Customer(int cusID, String cusName, String address, String email) {
         this.cusID = cusID;
         this.cusName = cusName;
@@ -35,20 +36,26 @@ public class Customer {
         this.email = email;
     }
 
-    public void register(){
+    public void register() {
 
     }
-    public void login(){
+
+    public void login() {
 
     }
-    public void viewInfo(){
+
+    public void viewInfo() {
 
     }
-    public void viewProducts(){
+
+    public void viewProducts() {
 
     }
-    public void searchForCategory(){
+
+    public void searchForCategory() {
 
     }
-    public void sortedByPrice(){}
+
+    public void sortedByPrice() {
+    }
 }
