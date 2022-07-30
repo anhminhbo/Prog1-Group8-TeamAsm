@@ -29,6 +29,12 @@ public class ProductService {
 
     }
 
+    public String[] getProduct(){
+        return new String[]{
+                Integer.toString(this.productID), this.productName, this.productCategory, this.description, Float.toString(this.price)
+        };
+    }
+
     @Override
     public String toString() {
         return "Product ID: " + this.productID + ", ProductName: " + this.productName + ", ProductCategory: " + this.productCategory + ", Description" + this.description + ", Price" + this.price;
