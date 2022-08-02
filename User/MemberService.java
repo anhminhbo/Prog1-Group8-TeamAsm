@@ -1,7 +1,6 @@
 package User;
 
-//import Menu.*;
-//import com.sun.tools.javac.Main;
+import Error.*;
 
 public class MemberService {
     private final int memberID;
@@ -14,19 +13,19 @@ public class MemberService {
 
     public MemberService(int memberID, String userName, String password, String fullName, int phoneNumber, String role, String memberShip) throws Exception{
         //validation check
-        if(!memberShip.equals("Gold") && !memberShip.equals("Silver") && !memberShip.equals("Platinum")){
-            throw new Exception();
+        if(!memberShip.equalsIgnoreCase("Gold") && !memberShip.equalsIgnoreCase("Silver") && !memberShip.equalsIgnoreCase("Platinum") && !memberShip.equalsIgnoreCase("None")){
+            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
         }
-        if (!role.equals("member") && !role.equals("admin")){
-            throw new Exception();
+        if (!role.equalsIgnoreCase("member") && !role.equalsIgnoreCase("admin")){
+            throw new WrongInputRole("Two roles expected Member or Admin");
         }
         this.memberID = memberID;
-        this.userName = userName;
-        this.password = password;
-        this.fullName = fullName;
+        this.userName = userName.trim();
+        this.password = password.trim();
+        this.fullName = fullName.trim();
         this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.memberShip = memberShip;
+        this.role = role.trim();
+        this.memberShip = memberShip.trim();
     }
 
     public int getMemberID() {
