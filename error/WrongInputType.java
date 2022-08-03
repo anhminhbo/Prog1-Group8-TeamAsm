@@ -1,4 +1,4 @@
-package Error;
+package error;
 
 public class WrongInputType extends Exception {
     public WrongInputType() {

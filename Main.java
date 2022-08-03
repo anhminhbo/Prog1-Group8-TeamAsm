@@ -1,14 +1,10 @@
-import TableFormatter.*;
-import Menu.*;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import menu.MainMenu;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         //Create product table service
-        MainMenu menu = new MainMenu();
-        menu.run();
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.run();
 //        TableFormatterService productTable = new TableFormatterService(
 //                new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
 //                        "DESCRIPTION", "PRICE"}

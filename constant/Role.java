@@ -1,4 +1,4 @@
-package Constant;
+package constant;
 
 public class Role {
     // Properties for Roles of user (user configurable)

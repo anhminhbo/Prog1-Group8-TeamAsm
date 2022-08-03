@@ -1,4 +1,4 @@
-package Product;
+package product;
 
 public class ProductService {
     private int productID;
@@ -16,20 +16,19 @@ public class ProductService {
     }
 
     public ProductService(int productID, String productName, String productCategory, String description, float price) {
-        try{
+        try {
             this.productID = productID;
             this.productName = productName;
             this.productCategory = productCategory;
             this.description = description;
             this.price = price;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e + "Invalid DataType");
         }
 
     }
 
-    public String[] getProduct(){
+    public String[] getProduct() {
         return new String[]{
                 Integer.toString(this.productID), this.productName, this.productCategory, this.description, Float.toString(this.price)
         };
