@@ -2,13 +2,13 @@ package utils;
 
 public class Option {
     private static final String[] fields = new String[]{"Input", "Action"};
-    private final String name;
+    private final String labelAction;
     private final String toggleKey;
     private final Command command;
 
-    public Option(String toggleKey, String name, Command command) {
+    public Option(String toggleKey, String labelAction, Command command) {
         this.toggleKey = toggleKey;
-        this.name = name;
+        this.labelAction = labelAction;
         this.command = command;
     }
 
@@ -17,20 +17,15 @@ public class Option {
     }
 
     public String[] toStringArray() {
-        return new String[]{toggleKey, name};
+        return new String[]{toggleKey, labelAction};
     }
 
-    public void execute() throws Exception {
-        try {
-            command.execute();
-        } catch (Exception err) {
-            System.out.println(err
-            );
-        }
+    public void execute() {
+        command.execute();
     }
 
-    public String getLabel() {
-        return name;
+    public String getLabelAction() {
+        return labelAction;
     }
 
     public String getToggleKey() {

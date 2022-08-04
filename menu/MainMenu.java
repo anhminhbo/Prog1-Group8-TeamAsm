@@ -12,6 +12,7 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -19,7 +20,7 @@ public class MainMenu extends Menu {
     private ArrayList<ProductService> ProductList = new ArrayList<>();
     private ArrayList<MemberService> MemberList = new ArrayList<>();
 
-    public MainMenu() throws Exception {
+    public MainMenu() {
 //        Initialize ProductList, OrderList and UserList
         readProductList();
         readUserList();
@@ -106,7 +107,8 @@ public class MainMenu extends Menu {
             String password = snc.nextLine().trim();
             for (MemberService member : MemberList) {
                 if (member.getUserName().equals(userName) && member.getPassword().equals(password)) {
-                    if (member.getRole() == Role.MEMBER) {
+                    System.out.println(member.getRole());
+                    if (Objects.equals(member.getRole(), Role.MEMBER)) {
                         MemberMenu memberMenu = new MemberMenu();
                         memberMenu.run();
                     } else {
@@ -137,29 +139,38 @@ public class MainMenu extends Menu {
 
     //    Need to put this in RepoService and Initialize in the main menu
     //initialize and read data from svc files
-    public void readProductList() throws Exception {
+    public void readProductList() {
         String productItem = "";
-        BufferedReader productReader = new BufferedReader(new FileReader("repo/Products.csv"));
-        while (productItem != null) {
-            if ((productItem = productReader.readLine()) == null) {
-                continue;
+        try {
+            BufferedReader productReader = new BufferedReader(new FileReader("repo/Products.csv"));
+            while (productItem != null) {
+                if ((productItem = productReader.readLine()) == null) {
+                    continue;
+                }
+                String[] singleItem = productItem.split(",");
+                ProductService newProduct = new ProductService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Float.parseFloat(singleItem[4]));
+                ProductList.add(newProduct);
             }
-            String[] singleItem = productItem.split(",");
-            ProductService newProduct = new ProductService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Float.parseFloat(singleItem[4]));
-            ProductList.add(newProduct);
+        } catch (Exception err) {
+            err.printStackTrace();
         }
+
     }
 
-    public void readUserList() throws Exception {
+    public void readUserList() {
         String userItem = "";
-        BufferedReader userReader = new BufferedReader(new FileReader("repo/User.csv"));
-        while (userItem != null) {
-            if ((userItem = userReader.readLine()) == null) {
-                continue;
+        try {
+            BufferedReader userReader = new BufferedReader(new FileReader("repo/User.csv"));
+            while (userItem != null) {
+                if ((userItem = userReader.readLine()) == null) {
+                    continue;
+                }
+                String[] singleItem = userItem.split(",");
+                MemberService newUser = new MemberService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Integer.parseInt(singleItem[4]), singleItem[5], singleItem[6]);
+                MemberList.add(newUser);
             }
-            String[] singleItem = userItem.split(",");
-            MemberService newUser = new MemberService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Integer.parseInt(singleItem[4]), singleItem[5], singleItem[6]);
-            MemberList.add(newUser);
+        } catch (Exception err) {
+            err.printStackTrace();
         }
     }
 

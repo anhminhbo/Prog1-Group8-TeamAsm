@@ -22,7 +22,7 @@ public class Menu {
         table.display();
     }
 
-    public void run() throws Exception {
+    public void run() {
         welcome();
         Scanner sc = new Scanner(System.in);
         displayOptions();
