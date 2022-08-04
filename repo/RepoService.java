@@ -1,4 +1,4 @@
-package Repo;
+package repo;
 import java.io.*;
 
 public class RepoService {

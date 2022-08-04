@@ -1,8 +1,9 @@
-package Error;
+package error;
 
-public class InvalidExceptionOption extends Exception{
+public class InvalidExceptionOption extends Exception {
     public InvalidExceptionOption() {
     }
+
     public InvalidExceptionOption(String message, Throwable err) {
         super(message);
     }
