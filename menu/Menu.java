@@ -1,5 +1,7 @@
 package menu;
 
+import User.MemberService;
+import product.ProductService;
 import tableFormatter.TableFormatterService;
 import utils.Option;
 
@@ -8,6 +10,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
+    protected ArrayList<ProductService> ProductList;
+    protected ArrayList<MemberService> MemberList;
+
     protected final List<Option> options = new ArrayList<>();
 
     protected void addOption(Option option) {
@@ -22,20 +27,21 @@ public class Menu {
         table.display();
     }
 
+
     public void run() {
         welcome();
         Scanner sc = new Scanner(System.in);
-        displayOptions();
+        //noinspection InfiniteLoopStatement
         while (true) {
+            displayOptions();
             System.out.print("Enter an option: ");
             String input = sc.next();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
                     option.execute();
-                    return;
                 }
             }
-            System.out.println("Invalid input. Please try again.");
+//            System.out.println("Invalid input. Please try again.");
         }
     }
 
