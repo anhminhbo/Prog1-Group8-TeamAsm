@@ -1,4 +1,4 @@
-package TableFormatter;
+package tableFormatter;
 
 import java.util.ArrayList;
 

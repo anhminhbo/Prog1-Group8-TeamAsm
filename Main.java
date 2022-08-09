@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Order.OrderService;
 import TableFormatter.*;
 import Menu.*;
@@ -23,6 +24,14 @@ public class Main {
 
         //Ex for table service
 
+=======
+import menu.MainMenu;
+
+public class Main {
+    public static void main(String[] args) {
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.run();
+>>>>>>> b6ba9edada7d173618ef569b8383d521060f4417
 //        TableFormatterService tableFormatterService = new TableFormatterService(
 //                new String[]{"EMPLOYEE ID", "NAME", "GENDER",
 //                        "AGE", "E-MAIL ID", "SALARY"});

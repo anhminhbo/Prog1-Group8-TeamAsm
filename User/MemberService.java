@@ -1,6 +1,7 @@
 package User;
 
-import Error.*;
+import constant.Role;
+import error.WrongInputRole;
 
 public class MemberService {
     private final int memberID;
@@ -11,12 +12,12 @@ public class MemberService {
     private final String role;
     private final String memberShip;
 
-    public MemberService(int memberID, String userName, String password, String fullName, int phoneNumber, String role, String memberShip) throws Exception{
+    public MemberService(int memberID, String userName, String password, String fullName, int phoneNumber, String role, String memberShip) throws Exception {
         //validation check
-        if(!memberShip.equalsIgnoreCase("Gold") && !memberShip.equalsIgnoreCase("Silver") && !memberShip.equalsIgnoreCase("Platinum") && !memberShip.equalsIgnoreCase("None")){
+        if (!memberShip.equalsIgnoreCase("Gold") && !memberShip.equalsIgnoreCase("Silver") && !memberShip.equalsIgnoreCase("Platinum") && !memberShip.equalsIgnoreCase("None")) {
             throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
         }
-        if (!role.equalsIgnoreCase("member") && !role.equalsIgnoreCase("admin")){
+        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
             throw new WrongInputRole("Two roles expected Member or Admin");
         }
         this.memberID = memberID;
@@ -58,6 +59,6 @@ public class MemberService {
 
     @Override
     public String toString() {
-        return this.memberID + "," + this.userName + "," + this.password  + "," + this.fullName + "," + this.phoneNumber + "," + this.role + "," + this.memberShip;
+        return this.memberID + "," + this.userName + "," + this.password + "," + this.fullName + "," + this.phoneNumber + "," + this.role + "," + this.memberShip;
     }
 }
