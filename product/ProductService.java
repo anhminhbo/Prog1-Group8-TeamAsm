@@ -28,6 +28,14 @@ public class ProductService {
 
     }
 
+    public float getPrice() {
+        return price;
+    }
+
+    public String getProductCategory() {
+        return productCategory;
+    }
+
     public String[] getProduct() {
         return new String[]{
                 Integer.toString(this.productID), this.productName, this.productCategory, this.description, Float.toString(this.price)

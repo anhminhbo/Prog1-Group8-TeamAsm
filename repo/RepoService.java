@@ -19,7 +19,7 @@ public class RepoService {
                 }
                 String[] singleItem = productItem.split(",");
                 ProductService newProduct = new ProductService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Float.parseFloat(singleItem[4]));
-                productList.add(newProduct);0
+                productList.add(newProduct);
             }
         } catch (Exception err) {
             err.printStackTrace();

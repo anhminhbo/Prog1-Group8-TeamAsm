@@ -2,6 +2,7 @@ package menu;
 
 import User.MemberService;
 import constant.Role;
+import error.InvalidExceptionOption;
 import error.InvalidUserFormat;
 import error.WrongInputType;
 import product.ProductService;
@@ -11,10 +12,7 @@ import repo.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class MainMenu extends Menu {
@@ -42,19 +40,6 @@ public class MainMenu extends Menu {
     public ArrayList<ProductService> getProductList() {
         return ProductList;
     }
-
-    public void setProductList(ArrayList<ProductService> productList) {
-        ProductList = productList;
-    }
-
-    public ArrayList<MemberService> getMemberList() {
-        return MemberList;
-    }
-
-    public void setMemberList(ArrayList<MemberService> memberList) {
-        MemberList = memberList;
-    }
-
 
     //main method for MainService
     public void register() {
@@ -142,16 +127,25 @@ public class MainMenu extends Menu {
     }
 
     public void viewAllProductsByPrice() {
+        RepoService repo = new RepoService();
         Scanner snc = new Scanner(System.in);
+        ArrayList<ProductService> sortedProducts;
         try {
+            System.out.println("What do you want to sort by ? Type A (Ascending) or D (Descending)");
+            String choice = snc.nextLine();
+            sortedProducts = repo.readProductList();
+            if (choice.equalsIgnoreCase("A")) {
+                sortedProducts.sort(new SortPriceASC());
+            } else if (choice.equalsIgnoreCase("D")) {
+                sortedProducts.sort(new SortPriceDESC());
+            } else {
+                throw new InvalidExceptionOption("Invalid option! Try again");
+            }
             TableFormatterService productTable = new TableFormatterService(
                     new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
                             "DESCRIPTION", "PRICE"}
             );
-            ArrayList<ProductService> sortedProductsASC;
-            sortedProductsASC = this.ProductList;
-
-            for (ProductService productService : sortedProductsASC) {
+            for (ProductService productService : sortedProducts) {
                 productTable.addRows(
                         productService.getProduct()
                 );
@@ -163,8 +157,51 @@ public class MainMenu extends Menu {
         }
     }
 
-    public void searchProductBasedOnCategories() {
+    @SuppressWarnings("InnerClassMayBeStatic")
+    class SortPriceASC implements Comparator<ProductService> {
+        public int compare(ProductService a, ProductService b) {
+            return (int) a.getPrice() - (int) b.getPrice();
+        }
+    }
 
+    @SuppressWarnings("InnerClassMayBeStatic")
+    class SortPriceDESC implements Comparator<ProductService> {
+        public int compare(ProductService a, ProductService b) {
+            return (int) b.getPrice() - (int) a.getPrice();
+        }
+    }
+
+
+    public void searchProductBasedOnCategories() {
+        Scanner snc = new Scanner(System.in);
+        String choice;
+        ArrayList<ProductService> productListBySearch = new ArrayList<>();
+        try {
+            System.out.println("What do you want to search by products category ? Type the category name");
+            choice = snc.nextLine();
+            for (ProductService productService : this.ProductList) {
+                if (productService.getProductCategory().equalsIgnoreCase(choice)) {
+                    productListBySearch.add(productService);
+                }
+            }
+            TableFormatterService productTable = new TableFormatterService(
+                    new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
+                            "DESCRIPTION", "PRICE"}
+            );
+            for (ProductService productService : productListBySearch) {
+                productTable.addRows(
+                        productService.getProduct()
+                );
+            }
+            if (productListBySearch.size() > 0) {
+                productTable.display();
+            } else {
+                System.out.println("Sorry! Cant find any results for " + choice + " category");
+            }
+            TimeUnit.SECONDS.sleep(3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //sub method that helps to optimize the project
