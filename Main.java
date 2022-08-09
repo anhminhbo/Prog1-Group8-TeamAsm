@@ -1,3 +1,4 @@
+import Order.OrderService;
 import TableFormatter.*;
 import Menu.*;
 
@@ -8,7 +9,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         //Create product table service
         MainMenu menu = new MainMenu();
-        menu.run();
+//        menu.run();
 //        TableFormatterService productTable = new TableFormatterService(
 //                new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
 //                        "DESCRIPTION", "PRICE"}
@@ -46,6 +47,19 @@ public class Main {
 //                }
 //        );
 //        tableFormatterService.display();
+
+        TableFormatterService productTable = new TableFormatterService(
+                new String[]{"ORDER ID", "CUSTOMER ID", "PAID STATUS",
+                        "PRODUCT LIST"}
+        );
+        for (int i = 0; i < menu.getOrderList().size(); i++) {
+            productTable.addRows(
+                    menu.getOrderList().get(i).getProduct()
+            );
+        }
+        productTable.display();
     }
+
+//    OrderService createOrder = new OrderService();
 
 }

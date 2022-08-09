@@ -1,5 +1,6 @@
 package Menu;
 
+import Order.*;
 import Product.*;
 import Error.*;
 import User.MemberService;
@@ -9,16 +10,19 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class MainMenu {
     private ArrayList<ProductService> ProductList = new ArrayList<>();
     private ArrayList<MemberService> MemberList = new ArrayList<>();
+    private ArrayList<OrderService> OrderList = new ArrayList<>();
     private MemberService CurrentUser = null;
 
     public MainMenu() throws Exception {
         readProductList();
         readUserList();
+        readOrderlist();
     }
 
     public ArrayList<ProductService> getProductList() {
@@ -45,6 +49,9 @@ public class MainMenu {
         CurrentUser = currentUser;
     }
 
+    public ArrayList<OrderService> getOrderList() {
+        return OrderList;
+    }
 
     public void run() {
         welcome();
@@ -183,6 +190,19 @@ public class MainMenu {
             String[] singleItem = userItem.split(",");
             MemberService newUser = new MemberService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Integer.parseInt(singleItem[4]), singleItem[5], singleItem[6]);
             MemberList.add(newUser);
+        }
+    }
+
+    public void readOrderlist() throws Exception {
+        String orderItem = "";
+        BufferedReader orderReader = new BufferedReader(new FileReader("Repo/Order.csv"));
+        while (orderItem != null) {
+            if ((orderItem = orderReader.readLine()) == null) {
+                continue;
+            }
+            String[] singleItem = orderItem.split(",");
+            OrderService newOrder = new OrderService(Integer.parseInt(singleItem[0]), Integer.parseInt(singleItem[1]), Boolean.parseBoolean(singleItem[2]), singleItem[3]);
+            OrderList.add(newOrder);
         }
     }
 
