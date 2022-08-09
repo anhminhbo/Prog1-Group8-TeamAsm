@@ -1,23 +1,9 @@
 import menu.MainMenu;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        //Create product table service
+    public static void main(String[] args) {
         MainMenu mainMenu = new MainMenu();
         mainMenu.run();
-//        TableFormatterService productTable = new TableFormatterService(
-//                new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
-//                        "DESCRIPTION", "PRICE"}
-//        );
-//        for (int i = 0; i < menu.getProductList().size(); i++) {
-//            productTable.addRows(
-//                    menu.getProductList().get(i).getProduct()
-//            );
-//        }
-//        productTable.display();
-
-        //Ex for table service
-
 //        TableFormatterService tableFormatterService = new TableFormatterService(
 //                new String[]{"EMPLOYEE ID", "NAME", "GENDER",
 //                        "AGE", "E-MAIL ID", "SALARY"});

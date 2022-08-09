@@ -6,36 +6,32 @@ import error.InvalidUserFormat;
 import error.WrongInputType;
 import product.ProductService;
 import utils.Option;
+import tableFormatter.TableFormatterService;
+import repo.*;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class MainMenu extends Menu {
-    private ArrayList<ProductService> ProductList = new ArrayList<>();
-    private ArrayList<MemberService> MemberList = new ArrayList<>();
+
 
     public MainMenu() {
+        RepoService repo = new RepoService();
 //        Initialize ProductList, OrderList and UserList
-        readProductList();
-        readUserList();
+        this.ProductList = repo.readProductList();
+        this.MemberList = repo.readUserList();
 
 //        Add options to MainMenu
-        this.addOption(new Option("1", "Register to become a member\s", () ->
-                register()));
-        this.addOption(new Option("2", "Login with your member account\s", () ->
-                login()));
-        this.addOption(new Option("3", "View all the products and its details\s", () ->
-                viewAllProducts()));
-        this.addOption(new Option("4", "View all products sorted by price\s", () ->
-                viewAllProductsByPrice()));
-        this.addOption(new Option("5", "Search products by particular category", () ->
-                searchProductBasedOnCategories()));
+        this.addOption(new Option("1", "Register to become a member\s", this::register));
+        this.addOption(new Option("2", "Login with your member account\s", this::login));
+        this.addOption(new Option("3", "View all the products and its details\s", this::viewAllProducts));
+        this.addOption(new Option("4", "View all products sorted by price\s", this::viewAllProductsByPrice));
+        this.addOption(new Option("5", "Search products by particular category", this::searchProductBasedOnCategories));
         this.addOption(new Option("6", "Exit the program", () ->
         {
             System.out.println("Good bye see you again.");
@@ -82,15 +78,17 @@ public class MainMenu extends Menu {
             String role = snc.nextLine();
             System.out.println("Enter your rank (if a member):");
             String memberShip = snc.nextLine();
-            MemberService newUser = new MemberService(this.MemberList.size() + 1, userName, password, fullName, phoneNumber, role, memberShip);
+            MemberService newUser = new MemberService(this.MemberList.size() + 1, userName, password, fullName, phoneNumber, role.toUpperCase(), memberShip);
             BufferedWriter userWriter = new BufferedWriter(new FileWriter("repo/User.csv", true));
             if (checkIfUserExist(newUser)) {
                 throw new InvalidUserFormat("The user already exited! Try again");
             }
-            MemberList.add(newUser);
+            this.MemberList.add(newUser);
             userWriter.newLine();
             userWriter.write(newUser.toString());
             userWriter.close();
+            System.out.println("Registered successfully !Login to enjoy the system");
+            TimeUnit.SECONDS.sleep(3);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,59 +117,54 @@ public class MainMenu extends Menu {
             }
             System.out.println("Invalid username or password. Try again later");
             TimeUnit.SECONDS.sleep(3);
-            this.run();
+//            this.run();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void viewAllProducts() {
-
+        try {
+            TableFormatterService productTable = new TableFormatterService(
+                    new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
+                            "DESCRIPTION", "PRICE"}
+            );
+            for (int i = 0; i < this.getProductList().size(); i++) {
+                productTable.addRows(
+                        this.getProductList().get(i).getProduct()
+                );
+            }
+            productTable.display();
+            TimeUnit.SECONDS.sleep(3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void viewAllProductsByPrice() {
+        Scanner snc = new Scanner(System.in);
+        try {
+            TableFormatterService productTable = new TableFormatterService(
+                    new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
+                            "DESCRIPTION", "PRICE"}
+            );
+            ArrayList<ProductService> sortedProductsASC;
+            sortedProductsASC = this.ProductList;
 
+            for (ProductService productService : sortedProductsASC) {
+                productTable.addRows(
+                        productService.getProduct()
+                );
+            }
+            productTable.display();
+            TimeUnit.SECONDS.sleep(3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void searchProductBasedOnCategories() {
 
-    }
-
-    //    Need to put this in RepoService and Initialize in the main menu
-    //initialize and read data from svc files
-    public void readProductList() {
-        String productItem = "";
-        try {
-            BufferedReader productReader = new BufferedReader(new FileReader("repo/Products.csv"));
-            while (productItem != null) {
-                if ((productItem = productReader.readLine()) == null) {
-                    continue;
-                }
-                String[] singleItem = productItem.split(",");
-                ProductService newProduct = new ProductService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Float.parseFloat(singleItem[4]));
-                ProductList.add(newProduct);
-            }
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
-
-    }
-
-    public void readUserList() {
-        String userItem = "";
-        try {
-            BufferedReader userReader = new BufferedReader(new FileReader("repo/User.csv"));
-            while (userItem != null) {
-                if ((userItem = userReader.readLine()) == null) {
-                    continue;
-                }
-                String[] singleItem = userItem.split(",");
-                MemberService newUser = new MemberService(Integer.parseInt(singleItem[0]), singleItem[1], singleItem[2], singleItem[3], Integer.parseInt(singleItem[4]), singleItem[5], singleItem[6]);
-                MemberList.add(newUser);
-            }
-        } catch (Exception err) {
-            err.printStackTrace();
-        }
     }
 
     //sub method that helps to optimize the project
