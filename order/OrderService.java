@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.lang.reflect.Array;
-import Error.*;
+import error.*;
 
 public class OrderService {
     private final int orderID;
     private final int cusID;
-    private boolean paidStatus;
+    private final boolean paidStatus;
 //    private String[] productList;
-    private StringBuilder productList = new StringBuilder();
+    private final StringBuilder productList = new StringBuilder();
     public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
         String[] item = productList.split(" ");
         for (int i = 0; i < item.length -1; i++) {

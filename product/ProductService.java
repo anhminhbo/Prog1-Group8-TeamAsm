@@ -32,8 +32,16 @@ public class ProductService {
         return price;
     }
 
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
     public String getProductCategory() {
         return productCategory;
+    }
+
+    public int getProductID() {
+        return productID;
     }
 
     public String[] getProduct() {
@@ -42,8 +50,11 @@ public class ProductService {
         };
     }
 
-    @Override
-    public String toString() {
-        return "Product ID: " + this.productID + ", ProductName: " + this.productName + ", ProductCategory: " + this.productCategory + ", Description" + this.description + ", Price" + this.price;
+    public void showProductDetail() {
+        System.out.println("Product ID: " + this.productID + "\nProductName: " + this.productName + "\nProductCategory: " + this.productCategory + "\nDescription: " + this.description + "\nPrice: " + this.price);
+    }
+
+    public String toDataLine() {
+        return this.productID + "," + this.productName + "," + this.productCategory + "," + this.description + "," + this.price + "\n";
     }
 }
