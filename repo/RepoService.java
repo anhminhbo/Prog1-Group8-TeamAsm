@@ -44,4 +44,30 @@ public class RepoService {
         }
         return memberList;
     }
+
+    public void writeIntoProductFile(ArrayList<ProductService> ProductList, boolean append){
+        try {
+            BufferedWriter DataWriter = new BufferedWriter(new FileWriter("repo/Products.csv", append));
+            for (ProductService product: ProductList){
+                DataWriter.write(product.toDataLine());
+            }
+            DataWriter.close();
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public void writeIntoFile(String fileName, String data, boolean append){
+        try {
+            BufferedWriter DataWriter = new BufferedWriter(new FileWriter(fileName, append));
+            DataWriter.write(data);
+            DataWriter.close();
+        }
+        catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
 }

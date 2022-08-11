@@ -57,8 +57,7 @@ public class MemberService {
         return memberShip;
     }
 
-    @Override
-    public String toString() {
+    public String toDataLine() {
         return this.memberID + "," + this.userName + "," + this.password + "," + this.fullName + "," + this.phoneNumber + "," + this.role + "," + this.memberShip;
     }
 }

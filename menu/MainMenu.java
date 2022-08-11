@@ -70,7 +70,7 @@ public class MainMenu extends Menu {
             }
             this.MemberList.add(newUser);
             userWriter.newLine();
-            userWriter.write(newUser.toString());
+            userWriter.write(newUser.toDataLine());
             userWriter.close();
             System.out.println("Registered successfully !Login to enjoy the system");
             TimeUnit.SECONDS.sleep(3);
