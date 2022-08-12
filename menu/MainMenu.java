@@ -6,27 +6,28 @@ import error.InvalidExceptionOption;
 import error.InvalidUserFormat;
 import error.WrongInputType;
 import product.ProductService;
-import utils.Option;
+import repo.RepoService;
 import tableFormatter.TableFormatterService;
-import repo.*;
+import utils.Option;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class MainMenu extends Menu {
-
+    private static final RepoService repo = new RepoService();
+    private static final ArrayList<ProductService> ProductList = repo.readProductList();
+    private static final ArrayList<MemberService> MemberList = repo.readUserList();
 
     public MainMenu() {
-        RepoService repo = new RepoService();
-//        Initialize ProductList, OrderList and UserList
-        this.ProductList = repo.readProductList();
-        this.MemberList = repo.readUserList();
 
 //        Add options to MainMenu
         this.addOption(new Option("1", "Register to become a member\s", this::register));
-        this.addOption(new Option("2", "Login with your member account\s", this::login));
+        this.addOption(new Option("2", "Login with your account\s", this::login));
         this.addOption(new Option("3", "View all the products and its details\s", this::viewAllProducts));
         this.addOption(new Option("4", "View all products sorted by price\s", this::viewAllProductsByPrice));
         this.addOption(new Option("5", "Search products by particular category", this::searchProductBasedOnCategories));
@@ -63,12 +64,12 @@ public class MainMenu extends Menu {
             String role = snc.nextLine();
             System.out.println("Enter your rank (if a member):");
             String memberShip = snc.nextLine();
-            MemberService newUser = new MemberService(this.MemberList.size() + 1, userName, password, fullName, phoneNumber, role.toUpperCase(), memberShip);
+            MemberService newUser = new MemberService(MemberList.size() + 1, userName, password, fullName, phoneNumber, role.toUpperCase(), memberShip);
             BufferedWriter userWriter = new BufferedWriter(new FileWriter("repo/User.csv", true));
             if (checkIfUserExist(newUser)) {
                 throw new InvalidUserFormat("The user already exited! Try again");
             }
-            this.MemberList.add(newUser);
+            MemberList.add(newUser);
             userWriter.newLine();
             userWriter.write(newUser.toDataLine());
             userWriter.close();
@@ -111,8 +112,7 @@ public class MainMenu extends Menu {
     public void viewAllProducts() {
         try {
             TableFormatterService productTable = new TableFormatterService(
-                    new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
-                            "DESCRIPTION", "PRICE"}
+                    ProductService.getLabelFields()
             );
             for (int i = 0; i < this.getProductList().size(); i++) {
                 productTable.addRows(
@@ -142,8 +142,8 @@ public class MainMenu extends Menu {
                 throw new InvalidExceptionOption("Invalid option! Try again");
             }
             TableFormatterService productTable = new TableFormatterService(
-                    new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
-                            "DESCRIPTION", "PRICE"}
+
+                    ProductService.getLabelFields()
             );
             for (ProductService productService : sortedProducts) {
                 productTable.addRows(
@@ -157,21 +157,6 @@ public class MainMenu extends Menu {
         }
     }
 
-    @SuppressWarnings("InnerClassMayBeStatic")
-    class SortPriceASC implements Comparator<ProductService> {
-        public int compare(ProductService a, ProductService b) {
-            return (int) a.getPrice() - (int) b.getPrice();
-        }
-    }
-
-    @SuppressWarnings("InnerClassMayBeStatic")
-    class SortPriceDESC implements Comparator<ProductService> {
-        public int compare(ProductService a, ProductService b) {
-            return (int) b.getPrice() - (int) a.getPrice();
-        }
-    }
-
-
     public void searchProductBasedOnCategories() {
         Scanner snc = new Scanner(System.in);
         String choice;
@@ -179,14 +164,13 @@ public class MainMenu extends Menu {
         try {
             System.out.println("What do you want to search by products category ? Type the category name");
             choice = snc.nextLine();
-            for (ProductService productService : this.ProductList) {
+            for (ProductService productService : ProductList) {
                 if (productService.getProductCategory().equalsIgnoreCase(choice)) {
                     productListBySearch.add(productService);
                 }
             }
             TableFormatterService productTable = new TableFormatterService(
-                    new String[]{"PRODUCT ID", "PRODUCT NAME", "PRODUCT CATEGORY",
-                            "DESCRIPTION", "PRICE"}
+                    ProductService.getLabelFields()
             );
             for (ProductService productService : productListBySearch) {
                 productTable.addRows(
@@ -212,6 +196,20 @@ public class MainMenu extends Menu {
             }
         }
         return false;
+    }
+
+    @SuppressWarnings("InnerClassMayBeStatic")
+    class SortPriceASC implements Comparator<ProductService> {
+        public int compare(ProductService a, ProductService b) {
+            return (int) a.getPrice() - (int) b.getPrice();
+        }
+    }
+
+    @SuppressWarnings("InnerClassMayBeStatic")
+    class SortPriceDESC implements Comparator<ProductService> {
+        public int compare(ProductService a, ProductService b) {
+            return (int) b.getPrice() - (int) a.getPrice();
+        }
     }
 
 

@@ -8,17 +8,25 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AdminService {
-    private String adminName;
     RepoService repo = new RepoService();
     public ArrayList<ProductService> ProductList = repo.readProductList();
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
+    private String adminName;
+
+    public static void main(String[] args) {
+        AdminService admin = new AdminService();
+        admin.addNewProduct();
+        //admin.updatePrice();
     }
+
     public String getAdminName() {
         return adminName;
     }
 
-    public void addNewProduct(){
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
+
+    public void addNewProduct() {
         // Initialize
         System.out.println("-- Add new product --\n");
         Scanner scan = new Scanner(System.in);
@@ -42,18 +50,18 @@ public class AdminService {
             description = scan.nextLine();
             System.out.println("Enter product price: ");
             price = scan.nextFloat();
-        }
-        catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             System.out.println("Your input is invalid.\nReturning back...");
             return;
         }
 
         ProductService temp = new ProductService(productID, productName, productCategory, description, price);
         repo.writeIntoFile("repo/Products.csv", temp.toDataLine(), true);
+        ProductList = repo.readProductList();
         System.out.println("A new product has been added.\nReturning back...");
     }
 
-    public void updatePrice(){
+    public void updatePrice() {
         System.out.println("-- Update product price by ID --\n");
         Scanner scan = new Scanner(System.in);
 
@@ -62,8 +70,7 @@ public class AdminService {
         try {
             System.out.print("Enter your desired product id: ");
             productID = scan.nextInt();
-        }
-        catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             System.out.println("Your input is invalid.\nReturning back...");
             return;
         }
@@ -71,8 +78,8 @@ public class AdminService {
         String res = null;
 
         // Process
-        for (ProductService product: ProductList){
-            if (productID == product.getProductID()){
+        for (ProductService product : ProductList) {
+            if (productID == product.getProductID()) {
                 product.showProductDetail();
                 System.out.println();
 
@@ -81,38 +88,30 @@ public class AdminService {
                     res = scan.next().toLowerCase();
                 } while (!res.equals("y") && !res.equals("n"));
 
-                if (res.equals("y")){
+                if (res.equals("y")) {
                     float newPrice;
                     try {
                         System.out.print("Enter your desired price for this product: ");
                         newPrice = scan.nextFloat();
-                    }
-                    catch (InputMismatchException e){
+                    } catch (InputMismatchException e) {
                         System.out.println("Your input is invalid.\nReturning back...");
                         return;
                     }
                     product.setPrice(newPrice);
-                }
-                else {
+                } else {
                     System.out.println("Please try again.\nReturning back...");
                 }
 
                 break;
             }
         }
-        if (res == null){
+        if (res == null) {
             System.out.println("Could not find your desired product.\nReturning back...");
             return;
         }
-        if (res.equals("y")){
+        if (res.equals("y")) {
             repo.writeIntoProductFile(ProductList, false);
             System.out.println("The new price has been adjusted. Returning back...");
         }
-    }
-
-    public static void main(String[] args) {
-        AdminService admin = new AdminService();
-        admin.addNewProduct();
-        //admin.updatePrice();
     }
 }

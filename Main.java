@@ -1,10 +1,12 @@
 //import menu.MainMenu;
 //import tableFormatter.TableFormatterService;
-//
-//public class Main {
-//    public static void main(String[] args) {
-//        MainMenu mainMenu = new MainMenu();
-//        mainMenu.run();
+
+import menu.MainMenu;
+
+public class Main {
+    public static void main(String[] args) {
+        MainMenu mainMenu = new MainMenu();
+        mainMenu.run();
 ////        TableFormatterService tableFormatterService = new TableFormatterService(
 ////                new String[]{"EMPLOYEE ID", "NAME", "GENDER",
 ////                        "AGE", "E-MAIL ID", "SALARY"});
@@ -44,4 +46,5 @@
 //
 ////    OrderService createOrder = new OrderService();
 //
-//}
+    }
+}

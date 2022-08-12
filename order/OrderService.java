@@ -1,28 +1,24 @@
 package order;
 
 
-import User.MemberService;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.lang.reflect.Array;
-import error.*;
 
 public class OrderService {
+    //    private String[] productList;
+    private final static String[] labelFields = {"Order ID", "Customer ID", "Paid Status"};
     private final int orderID;
     private final int cusID;
     private final boolean paidStatus;
-//    private String[] productList;
     private final StringBuilder productList = new StringBuilder();
+
     public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
         String[] item = productList.split(" ");
-        for (int i = 0; i < item.length -1; i++) {
-            if(i%2 == 0){
-            this.productList.append(item[i]).append("x").append(item[i + 1]);
-            }
-            else{
+        for (int i = 0; i < item.length - 1; i++) {
+            if (i % 2 == 0) {
+                this.productList.append(item[i]).append("x").append(item[i + 1]);
+            } else {
                 this.productList.append("; ");
             }
         }
@@ -34,13 +30,17 @@ public class OrderService {
 
     }
 
-    public String[] getProduct(){
+    public static String[] getLabelFields() {
+        return labelFields;
+    }
+
+    public String[] getProduct() {
         return new String[]{
                 Integer.toString(this.orderID), Integer.toString(this.cusID), Boolean.toString(paidStatus), String.valueOf(this.productList)
         };
     }
 
-    public void createOrder(){
+    public void createOrder() {
         try {
             Scanner scanner = new Scanner(System.in);
             List<Integer> productID = new ArrayList<>();
@@ -57,8 +57,7 @@ public class OrderService {
                 System.out.println("Do you want to buy anything else (Y/N):");
                 Scanner myObj = new Scanner(System.in);
                 input = myObj.nextLine().trim();
-                while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n"))
-                {
+                while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) {
                     System.out.println("Please type in Y or N:");
                     input = myObj.nextLine().trim();
                 }
@@ -70,7 +69,7 @@ public class OrderService {
             System.out.println("You entered: " + productQuantity);
 
             StringBuilder newString = new StringBuilder();
-            for(int i = 0; i < productID.size(); i++) {
+            for (int i = 0; i < productID.size(); i++) {
                 newString.append(productID.get(i).toString()).append(" ");
                 newString.append(productQuantity.get(i).toString()).append(" ");
             }

@@ -1,6 +1,7 @@
 package product;
 
 public class ProductService {
+    private final static String[] labelFields = {"Product ID", "Product Name", "Product Category", "Description", "Price"};
     private int productID;
     private String productName;
     private String productCategory;
@@ -26,6 +27,10 @@ public class ProductService {
             System.out.println(e + "Invalid DataType");
         }
 
+    }
+
+    public static String[] getLabelFields() {
+        return labelFields;
     }
 
     public float getPrice() {

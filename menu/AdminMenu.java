@@ -1,11 +1,17 @@
 package menu;
 
+import User.AdminService;
 import utils.Option;
 
 public class AdminMenu extends Menu {
+    private final AdminService adminService = new AdminService();
+
     public AdminMenu() {
-        this.addOption(new Option("1", "Option 1 AdminMenu", () -> {
-            System.out.println("Callback function AdminMenu here");
+        this.addOption(new Option("1", "Add new product to the store", () -> {
+            adminService.addNewProduct();
+        }));
+        this.addOption(new Option("2", "Update product price", () -> {
+            adminService.updatePrice();
         }));
         this.addOption(new Option("5", "Log out", () ->
         {
@@ -19,4 +25,5 @@ public class AdminMenu extends Menu {
             System.exit(0);
         }));
     }
+
 }

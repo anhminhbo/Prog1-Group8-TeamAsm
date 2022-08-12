@@ -4,6 +4,7 @@ import constant.Role;
 import error.WrongInputRole;
 
 public class MemberService {
+    private final static String[] labelFields = {"Member ID", "User Name", "Password", "Full Name", "Phone Number", "Role", "Membership"};
     private final int memberID;
     private final String userName;
     private final String password;
@@ -27,6 +28,10 @@ public class MemberService {
         this.phoneNumber = phoneNumber;
         this.role = role.trim();
         this.memberShip = memberShip.trim();
+    }
+
+    public static String[] getLabelFields() {
+        return labelFields;
     }
 
     public int getMemberID() {
