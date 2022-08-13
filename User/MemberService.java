@@ -4,18 +4,31 @@ import constant.Role;
 import error.WrongInputRole;
 
 public class MemberService {
-    private final static String[] labelFields = {"Member ID", "User Name", "Password", "Full Name", "Phone Number", "Role", "Membership"};
+    private static final String[] labelFields = {
+        "Member ID", "User Name", "Password", "Full Name", "Phone Number", "Role", "Membership"
+    };
     private final int memberID;
     private final String userName;
     private final String password;
     private final String fullName;
-    private final int phoneNumber;
+    private final String phoneNumber;
     private final String role;
     private final String memberShip;
 
-    public MemberService(int memberID, String userName, String password, String fullName, int phoneNumber, String role, String memberShip) throws Exception {
-        //validation check
-        if (!memberShip.equalsIgnoreCase("Gold") && !memberShip.equalsIgnoreCase("Silver") && !memberShip.equalsIgnoreCase("Platinum") && !memberShip.equalsIgnoreCase("None")) {
+    public MemberService(
+            int memberID,
+            String userName,
+            String password,
+            String fullName,
+            String phoneNumber,
+            String role,
+            String memberShip)
+            throws Exception {
+        // validation check
+        if (!memberShip.equalsIgnoreCase("Gold")
+                && !memberShip.equalsIgnoreCase("Silver")
+                && !memberShip.equalsIgnoreCase("Platinum")
+                && !memberShip.equalsIgnoreCase("None")) {
             throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
         }
         if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
@@ -50,7 +63,7 @@ public class MemberService {
         return fullName;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -63,6 +76,30 @@ public class MemberService {
     }
 
     public String toDataLine() {
-        return this.memberID + "," + this.userName + "," + this.password + "," + this.fullName + "," + this.phoneNumber + "," + this.role + "," + this.memberShip;
+        return this.memberID
+                + ","
+                + this.userName
+                + ","
+                + this.password
+                + ","
+                + this.fullName
+                + ","
+                + this.phoneNumber
+                + ","
+                + this.role
+                + ","
+                + this.memberShip;
+    }
+
+    public String[] getMember() {
+        return new String[] {
+            Integer.toString(this.memberID),
+            this.userName,
+            this.password,
+            this.fullName,
+            this.phoneNumber,
+            this.role,
+            this.memberShip
+        };
     }
 }

@@ -1,7 +1,9 @@
 package product;
 
 public class ProductService {
-    private final static String[] labelFields = {"Product ID", "Product Name", "Product Category", "Description", "Price"};
+    private static final String[] labelFields = {
+        "Product ID", "Product Name", "Product Category", "Description", "Price"
+    };
     private int productID;
     private String productName;
     private String productCategory;
@@ -16,7 +18,12 @@ public class ProductService {
         this.price = 0;
     }
 
-    public ProductService(int productID, String productName, String productCategory, String description, float price) {
+    public ProductService(
+            int productID,
+            String productName,
+            String productCategory,
+            String description,
+            float price) {
         try {
             this.productID = productID;
             this.productName = productName;
@@ -26,7 +33,6 @@ public class ProductService {
         } catch (Exception e) {
             System.out.println(e + "Invalid DataType");
         }
-
     }
 
     public static String[] getLabelFields() {
@@ -50,16 +56,39 @@ public class ProductService {
     }
 
     public String[] getProduct() {
-        return new String[]{
-                Integer.toString(this.productID), this.productName, this.productCategory, this.description, Float.toString(this.price)
+        return new String[] {
+            Integer.toString(this.productID),
+            this.productName,
+            this.productCategory,
+            this.description,
+            Float.toString(this.price)
         };
     }
 
     public void showProductDetail() {
-        System.out.println("Product ID: " + this.productID + "\nProductName: " + this.productName + "\nProductCategory: " + this.productCategory + "\nDescription: " + this.description + "\nPrice: " + this.price);
+        System.out.println(
+                "Product ID: "
+                        + this.productID
+                        + "\nProductName: "
+                        + this.productName
+                        + "\nProductCategory: "
+                        + this.productCategory
+                        + "\nDescription: "
+                        + this.description
+                        + "\nPrice: "
+                        + this.price);
     }
 
     public String toDataLine() {
-        return this.productID + "," + this.productName + "," + this.productCategory + "," + this.description + "," + this.price + "\n";
+        return this.productID
+                + ","
+                + this.productName
+                + ","
+                + this.productCategory
+                + ","
+                + this.description
+                + ","
+                + this.price
+                + "\n";
     }
 }

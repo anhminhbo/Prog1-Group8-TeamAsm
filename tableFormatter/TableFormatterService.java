@@ -29,8 +29,11 @@ public class TableFormatterService {
                 System.out.print(labels[i]);
                 continue;
             }
-            int distance = listOfColumnsLength.get(i - 1) - labels[i - 1].length()
-                    + spaceBetween + labels[i].length();
+            int distance =
+                    listOfColumnsLength.get(i - 1)
+                            - labels[i - 1].length()
+                            + spaceBetween
+                            + labels[i].length();
             System.out.printf("%" + distance + "s", labels[i]);
         }
         System.out.println();
@@ -39,8 +42,11 @@ public class TableFormatterService {
             for (int j = 0; j < rows.get(i).length; j++) {
                 int distance = 0;
                 if (j != 0) {
-                    distance = listOfColumnsLength.get(j - 1) - rows.get(i)[j - 1].length()
-                            + spaceBetween + rows.get(i)[j].length();
+                    distance =
+                            listOfColumnsLength.get(j - 1)
+                                    - rows.get(i)[j - 1].length()
+                                    + spaceBetween
+                                    + rows.get(i)[j].length();
                     System.out.printf("%" + distance + "s", rows.get(i)[j]);
                 } else {
                     System.out.print(rows.get(i)[j]);
@@ -56,7 +62,8 @@ public class TableFormatterService {
     }
 
     private void printDelimiter() {
-        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println(
+                "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
     private ArrayList<Integer> maximumLengthOfColumn() {
@@ -64,8 +71,7 @@ public class TableFormatterService {
         for (int i = 0; i < labels.length; i++) {
             maxLen = Math.max(labels[i].length(), maxLen);
             for (String[] row : rows) {
-                maxLen = Math.max(row[i].length(),
-                        maxLen);
+                maxLen = Math.max(row[i].length(), maxLen);
             }
             maxLengthsOfEachColumn.add(maxLen);
             maxLen = 0;
@@ -73,7 +79,4 @@ public class TableFormatterService {
 
         return maxLengthsOfEachColumn;
     }
-
-
 }
-

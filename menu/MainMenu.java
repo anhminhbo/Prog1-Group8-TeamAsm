@@ -4,7 +4,6 @@ import User.MemberService;
 import constant.Role;
 import error.InvalidExceptionOption;
 import error.InvalidUserFormat;
-import error.WrongInputType;
 import product.ProductService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
@@ -53,19 +52,16 @@ public class MainMenu extends Menu {
             System.out.println("Enter your Full Name:");
             String fullName = snc.nextLine();
             System.out.println("Enter your Phone Number:");
-            int phoneNumber;
-            try {
-                phoneNumber = snc.nextInt();
-                snc.nextLine();
-            } catch (Exception e) {
-                throw new WrongInputType("Please input the number for the phone! Not String", e);
-            }
+            String phoneNumber = snc.nextLine();
             System.out.println("Enter your current role:");
             String role = snc.nextLine();
             System.out.println("Enter your rank (if a member):");
             String memberShip = snc.nextLine();
-            MemberService newUser = new MemberService(MemberList.size() + 1, userName, password, fullName, phoneNumber, role.toUpperCase(), memberShip);
-            BufferedWriter userWriter = new BufferedWriter(new FileWriter("repo/User.csv", true));
+            MemberService newUser = new MemberService(MemberList.size() + 1,
+                    userName, password, fullName,
+                    phoneNumber, role.toUpperCase(), memberShip);
+            BufferedWriter userWriter = new BufferedWriter(new FileWriter("repo/User.csv",
+                    true));
             if (checkIfUserExist(newUser)) {
                 throw new InvalidUserFormat("The user already exited! Try again");
             }
@@ -91,7 +87,6 @@ public class MainMenu extends Menu {
             String password = snc.nextLine().trim();
             for (MemberService member : MemberList) {
                 if (member.getUserName().equals(userName) && member.getPassword().equals(password)) {
-                    System.out.println(member.getRole());
                     if (Objects.equals(member.getRole(), Role.MEMBER)) {
                         MemberMenu memberMenu = new MemberMenu();
                         memberMenu.run();

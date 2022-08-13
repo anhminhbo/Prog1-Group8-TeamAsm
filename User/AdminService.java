@@ -2,10 +2,12 @@ package User;
 
 import product.ProductService;
 import repo.RepoService;
+import tableFormatter.TableFormatterService;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class AdminService {
     RepoService repo = new RepoService();
@@ -15,7 +17,7 @@ public class AdminService {
     public static void main(String[] args) {
         AdminService admin = new AdminService();
         admin.addNewProduct();
-        //admin.updatePrice();
+        // admin.updatePrice();
     }
 
     public String getAdminName() {
@@ -24,6 +26,20 @@ public class AdminService {
 
     public void setAdminName(String adminName) {
         this.adminName = adminName;
+    }
+
+    public void viewAllProducts() {
+        TableFormatterService tableFormatter =
+                new TableFormatterService(ProductService.getLabelFields());
+        for (ProductService product : ProductList) {
+            tableFormatter.addRows(product.getProduct());
+        }
+        tableFormatter.display();
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception err) {
+            System.out.println(err);
+        }
     }
 
     public void addNewProduct() {
@@ -36,7 +52,6 @@ public class AdminService {
         String productCategory;
         String description;
         float price;
-
         // Input
         try {
             System.out.println("Enter product id: ");
@@ -55,7 +70,8 @@ public class AdminService {
             return;
         }
 
-        ProductService temp = new ProductService(productID, productName, productCategory, description, price);
+        ProductService temp =
+                new ProductService(productID, productName, productCategory, description, price);
         repo.writeIntoFile("repo/Products.csv", temp.toDataLine(), true);
         ProductList = repo.readProductList();
         System.out.println("A new product has been added.\nReturning back...");
@@ -112,6 +128,21 @@ public class AdminService {
         if (res.equals("y")) {
             repo.writeIntoProductFile(ProductList, false);
             System.out.println("The new price has been adjusted. Returning back...");
+        }
+    }
+
+    public void viewAllMembers() {
+        ArrayList<MemberService> memberList = repo.readUserList();
+        TableFormatterService tableFormatter =
+                new TableFormatterService(MemberService.getLabelFields());
+        for (MemberService member : memberList) {
+            tableFormatter.addRows(member.getMember());
+        }
+        tableFormatter.display();
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception err) {
+            System.out.println(err);
         }
     }
 }

@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
+    protected final List<Option> options = new ArrayList<>();
     protected ArrayList<ProductService> ProductList;
     protected ArrayList<MemberService> MemberList;
-
-    protected final List<Option> options = new ArrayList<>();
 
     protected void addOption(Option option) {
         options.add(option);
@@ -34,14 +33,13 @@ public class Menu {
         //noinspection InfiniteLoopStatement
         while (true) {
             displayOptions();
-            System.out.print("Enter an option: ");
+            System.out.println("Enter an option: ");
             String input = sc.next();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
                     option.execute();
                 }
             }
-//            System.out.println("Invalid input. Please try again.");
         }
     }
 
