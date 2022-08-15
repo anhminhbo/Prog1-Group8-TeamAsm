@@ -6,7 +6,7 @@ public class AdminService {
     public static void main(String[] args) {
         //        AdminService admin = new AdminService();
         //        admin.addNewProduct();
-        // admin.updatePriceÏ();
+        // admin.updatePrice();
     }
 
     public String getAdminName() {
