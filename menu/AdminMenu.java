@@ -1,17 +1,22 @@
 package menu;
 
 import User.AdminService;
+import User.MemberService;
+import product.ProductService;
 import utils.Option;
 
 public class AdminMenu extends Menu {
-    private final AdminService adminService = new AdminService();
 
     public AdminMenu() {
+        AdminService adminService = new AdminService();
+        ProductService productService = new ProductService(super.getRepo());
+        MemberService memberService = new MemberService(super.getRepo());
+
         this.addOption(
-                new Option("1", "Add new product to the store", adminService::addNewProduct));
-        this.addOption(new Option("2", "Update product price", adminService::updatePrice));
-        this.addOption(new Option("3", "View all products", adminService::viewAllProducts));
-        this.addOption(new Option("4", "View all members", adminService::viewAllMembers));
+                new Option("1", "Add new product to the store", productService::addNewProduct));
+        this.addOption(new Option("2", "Update product price", productService::updatePrice));
+        this.addOption(new Option("3", "View all products", productService::viewAllProducts));
+        this.addOption(new Option("4", "View all members", memberService::viewAllMembers));
         this.addOption(
                 new Option(
                         "5",
