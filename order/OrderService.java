@@ -1,5 +1,6 @@
 package order;
 
+import repo.RepoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +8,16 @@ import java.util.Scanner;
 
 public class OrderService {
     //    private String[] productList;
-    private final static String[] labelFields = {"Order ID", "Customer ID", "Paid Status"};
-    private final int orderID;
-    private final int cusID;
-    private final boolean paidStatus;
-    private final StringBuilder productList = new StringBuilder();
+    private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status"};
+    private static RepoService repo;
+    private int orderID;
+    private int cusID;
+    private boolean paidStatus;
+    private StringBuilder productList = new StringBuilder();
+
+    public OrderService(RepoService repo) {
+        if (OrderService.repo == null) OrderService.repo = repo;
+    }
 
     public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
         String[] item = productList.split(" ");
@@ -25,8 +31,7 @@ public class OrderService {
         this.orderID = orderID;
         this.cusID = cusID;
         this.paidStatus = false;
-//        this.productList = productList.split(" ");
-
+        //        this.productList = productList.split(" ");
 
     }
 
@@ -35,8 +40,11 @@ public class OrderService {
     }
 
     public String[] getProduct() {
-        return new String[]{
-                Integer.toString(this.orderID), Integer.toString(this.cusID), Boolean.toString(paidStatus), String.valueOf(this.productList)
+        return new String[] {
+            Integer.toString(this.orderID),
+            Integer.toString(this.cusID),
+            Boolean.toString(paidStatus),
+            String.valueOf(this.productList)
         };
     }
 
@@ -49,7 +57,7 @@ public class OrderService {
             while (true) {
                 System.out.println("Type in the ID of the product: ");
                 int pID = scanner.nextInt();
-                //check if the product exist and still available
+                // check if the product exist and still available
                 System.out.println("How many you want to buy: ");
                 int pQuantity = scanner.nextInt();
                 productID.add(pID);
@@ -77,7 +85,5 @@ public class OrderService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 }

@@ -1,6 +1,3 @@
-// import menu.MainMenu;
-// import tableFormatter.TableFormatterService;
-
 import menu.MainMenu;
 
 public class Main {

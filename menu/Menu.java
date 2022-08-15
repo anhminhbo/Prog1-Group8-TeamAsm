@@ -1,7 +1,6 @@
 package menu;
 
-import User.MemberService;
-import product.ProductService;
+import repo.RepoService;
 import tableFormatter.TableFormatterService;
 import utils.Option;
 
@@ -10,10 +9,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
-    protected final List<Option> options = new ArrayList<>();
-    protected ArrayList<ProductService> ProductList;
-    protected ArrayList<MemberService> MemberList;
+    private final RepoService repo = new RepoService();
+    private final List<Option> options = new ArrayList<>();
 
+    public RepoService getRepo() {
+        return repo;
+    }
+    
     protected void addOption(Option option) {
         options.add(option);
     }

@@ -50,8 +50,7 @@ public class RepoService {
                                 singleItem[2],
                                 singleItem[3],
                                 singleItem[4],
-                                singleItem[5],
-                                singleItem[6]);
+                                singleItem[5]);
                 memberList.add(newUser);
             }
         } catch (Exception err) {
