@@ -38,7 +38,7 @@ public class AdminService {
         try {
             TimeUnit.SECONDS.sleep(4);
         } catch (Exception err) {
-            System.out.println(err);
+            err.printStackTrace();
         }
     }
 
@@ -77,6 +77,51 @@ public class AdminService {
         System.out.println("A new product has been added.\nReturning back...");
     }
 
+    public void removeProduct() {
+        System.out.println("-- Remove product price by ID --\n");
+        Scanner scan = new Scanner(System.in);
+        String choice;
+        ProductService removeProduct = null;
+        int productID;
+
+        //input
+        try {
+            System.out.print("Enter product id to remove: ");
+            productID = scan.nextInt();
+            scan.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Your input is invalid.\nReturning back...");
+            return;
+        }
+
+        //Process
+        for (ProductService productService : ProductList) {
+            if (productID == productService.getProductID()) {
+                productService.showProductDetail();
+                System.out.println();
+            }
+            do {
+                System.out.print("Do you want to remove this product? It will be permanently delete!! (Y/N)? ");
+                choice = scan.next();
+            } while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("n"));
+            if (choice.equalsIgnoreCase("y")) {
+                removeProduct = productService;
+                ProductList.remove(productService);
+                repo.writeIntoProductFile(ProductList, false);
+                System.out.println("The product list has been updated. Returning back...");
+            }
+            else {
+                System.out.println("Cancel the action.\nReturning back...");
+                return;
+            }
+            break;
+        }
+        //change to ProductList and ProductList
+        if (removeProduct == null) {
+            System.out.println("Could not find your desired product.\nReturning back...");
+        }
+    }
+
     public void updatePrice() {
         System.out.println("-- Update product price by ID --\n");
         Scanner scan = new Scanner(System.in);
@@ -103,7 +148,6 @@ public class AdminService {
                     System.out.print("Is this your desired product (Y/N)? ");
                     res = scan.next().toLowerCase();
                 } while (!res.equals("y") && !res.equals("n"));
-
                 if (res.equals("y")) {
                     float newPrice;
                     try {
@@ -142,7 +186,7 @@ public class AdminService {
         try {
             TimeUnit.SECONDS.sleep(4);
         } catch (Exception err) {
-            System.out.println(err);
+            err.printStackTrace();
         }
     }
 }

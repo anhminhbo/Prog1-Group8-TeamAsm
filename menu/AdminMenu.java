@@ -9,12 +9,14 @@ public class AdminMenu extends Menu {
     public AdminMenu() {
         this.addOption(
                 new Option("1", "Add new product to the store", adminService::addNewProduct));
-        this.addOption(new Option("2", "Update product price", adminService::updatePrice));
-        this.addOption(new Option("3", "View all products", adminService::viewAllProducts));
-        this.addOption(new Option("4", "View all members", adminService::viewAllMembers));
+        this.addOption(
+                new Option("2", "Remove product from the store", adminService::removeProduct));
+        this.addOption(new Option("3", "Update product price", adminService::updatePrice));
+        this.addOption(new Option("4", "View all products", adminService::viewAllProducts));
+        this.addOption(new Option("5", "View all members", adminService::viewAllMembers));
         this.addOption(
                 new Option(
-                        "5",
+                        "6",
                         "Log out",
                         () -> {
                             MainMenu mainMenu = new MainMenu();
@@ -23,7 +25,7 @@ public class AdminMenu extends Menu {
                         }));
         this.addOption(
                 new Option(
-                        "6",
+                        "7",
                         "Exit the program",
                         () -> {
                             System.out.println("Good bye see you again.");
