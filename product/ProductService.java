@@ -210,6 +210,52 @@ public class ProductService {
         System.out.println("A new product has been added.\nReturning back...");
     }
 
+    public void removeProduct() {
+        System.out.println("-- Remove product price by ID --\n");
+        Scanner scan = new Scanner(System.in);
+        String choice;
+        int removeProductIndex = -1;
+        int productID;
+        ArrayList<ProductService> ProductList = repo.readProductList();
+
+        //input
+        try {
+            System.out.print("Enter product id to remove: ");
+            productID = scan.nextInt();
+            scan.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Your input is invalid.\nReturning back...");
+            return;
+        }
+
+        //Process
+        for (ProductService productService : ProductList) {
+            if (productID == productService.getProductID()) {
+                System.out.println();
+                productService.showProductDetail();
+                System.out.println();
+                do {
+                    System.out.print("Do you want to remove this product? It will be permanently delete!! (Y/N)? ");
+                    choice = scan.next();
+                } while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("n"));
+                if (choice.equalsIgnoreCase("y")) {
+                    removeProductIndex = ProductList.indexOf(productService);
+                    ProductList.remove(removeProductIndex);
+                    repo.writeIntoProductFile(ProductList, false);
+                    System.out.println("The product list has been updated. Returning back...");
+                }
+                else {
+                    System.out.println("Cancel the action.\nReturning back...");
+                    return;
+                }
+                break;
+            }
+        }
+        if (removeProductIndex == -1) {
+            System.out.println("Could not find your desired product.\nReturning back...");
+        }
+    }
+
     public void updatePrice() {
         System.out.println("-- Update product price by ID --\n");
         Scanner scan = new Scanner(System.in);
