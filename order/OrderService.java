@@ -46,10 +46,10 @@ public class OrderService {
 
     public String[] getProduct() {
         return new String[] {
-            Integer.toString(this.orderID),
-            Integer.toString(this.cusID),
-            Boolean.toString(paidStatus),
-            String.valueOf(this.productList)
+                Integer.toString(this.orderID),
+                Integer.toString(this.cusID),
+                Boolean.toString(paidStatus),
+                String.valueOf(this.productList)
         };
     }
 
@@ -106,27 +106,27 @@ public class OrderService {
 
     public void getOrderByOrderID() {
         try {
-                Scanner scanner = new Scanner(System.in);
-                System.out.println("Type in the ID of the order: ");
-                String orderID = scanner.nextLine().trim();
-                List<String> listOfStrings = new ArrayList<>();
-                BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
-                String line = bf.readLine();
-                while (line != null) {
-                    listOfStrings.add(line);
-                    line = bf.readLine();
-                }
-                bf.close();
-                String[] array = listOfStrings.toArray(new String[0]);
-                for (String str : array) {
-                    String[] parts = str.split(",");
-                    if (orderID.equals(parts[0])){
-                        System.out.println("Here is your order:");
-                        System.out.println(str);
-                        break;
-                    }
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Type in the ID of the order: ");
+            String orderID = scanner.nextLine().trim();
+            List<String> listOfStrings = new ArrayList<>();
+            BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
+            String line = bf.readLine();
+            while (line != null) {
+                listOfStrings.add(line);
+                line = bf.readLine();
+            }
+            bf.close();
+            String[] array = listOfStrings.toArray(new String[0]);
+            for (String str : array) {
+                String[] parts = str.split(",");
+                if (orderID.equals(parts[0])){
+                    System.out.println("Here is your order:");
+                    System.out.println(str);
+                    break;
                 }
             }
+        }
         catch (Exception e) {
             e.printStackTrace();
         }

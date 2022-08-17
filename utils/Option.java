@@ -1,7 +1,7 @@
 package utils;
 
 public class Option {
-    private static final String[] fields = new String[]{"Input", "Action"};
+    private static final String[] fields = new String[] {"Input", "Action"};
     private final String labelAction;
     private final String toggleKey;
     private final Command command;
@@ -17,7 +17,7 @@ public class Option {
     }
 
     public String[] toStringArray() {
-        return new String[]{toggleKey, labelAction};
+        return new String[] {toggleKey, labelAction};
     }
 
     public void execute() {

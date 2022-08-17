@@ -1,7 +1,7 @@
 package menu;
 
 import User.MemberService;
-import product.ProductService;
+import repo.RepoService;
 import tableFormatter.TableFormatterService;
 import utils.Option;
 
@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
-    protected ArrayList<ProductService> ProductList;
-    protected ArrayList<MemberService> MemberList;
+    private final RepoService repo = new RepoService();
+    private final List<Option> options = new ArrayList<>();
     protected MemberService CurrentUser;
-    protected final List<Option> options = new ArrayList<>();
 
+    public RepoService getRepo() {
+        return repo;
+    }
+    
     protected void addOption(Option option) {
         options.add(option);
     }
@@ -27,9 +30,6 @@ public class Menu {
         table.display();
     }
 
-    public void setCurrentUser(MemberService currentUser) {
-        CurrentUser = currentUser;
-    }
 
     public void run() {
         welcome();
@@ -37,14 +37,13 @@ public class Menu {
         //noinspection InfiniteLoopStatement
         while (true) {
             displayOptions();
-            System.out.print("Enter an option: ");
+            System.out.println("Enter an option: ");
             String input = sc.next();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
                     option.execute();
                 }
             }
-//            System.out.println("Invalid input. Please try again.");
         }
     }
 
@@ -66,4 +65,3 @@ public class Menu {
         System.out.println("---------------------------------------------------------------------------------------------");
     }
 }
-

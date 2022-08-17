@@ -3,7 +3,6 @@ package User;
 public class AdminService {
     private String adminName;
 
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
+    public static void main(String[] args) {
     }
 }
