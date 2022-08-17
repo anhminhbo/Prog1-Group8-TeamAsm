@@ -16,11 +16,16 @@ import java.util.Scanner;
 public class OrderService {
     //    private String[] productList;
     private static RepoService repo;
-    private final int orderID;
+    private int orderID;
     private final int cusID;
     private boolean paidStatus;
     //    private String[] productList;
     private StringBuilder productList = new StringBuilder();
+
+    public OrderService(int cusID) {
+        this.cusID = cusID;
+    }
+
     public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
         String[] item = productList.split(" ");
         for (int i = 0; i < item.length -1; i++) {
@@ -86,6 +91,9 @@ public class OrderService {
             Path path = Paths.get("repo/Order.csv");
             long lines = Files.lines(path).count();
             pw.append((char) (lines + 1));
+
+            pw.append(", ");
+            pw.append((char) this.cusID);
             pw.append(", ");
             pw.append("false");
             pw.append(", ");
@@ -101,7 +109,6 @@ public class OrderService {
                 Scanner scanner = new Scanner(System.in);
                 System.out.println("Type in the ID of the order: ");
                 String orderID = scanner.nextLine().trim();
-
                 List<String> listOfStrings = new ArrayList<>();
                 BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
                 String line = bf.readLine();
@@ -181,7 +188,6 @@ public class OrderService {
                     System.out.println(parts[2]);
                     parts[2] = newStatus.replace(parts[2], newStatus);
                     System.out.println(parts[2]);
-                    Files.write(Path.of("repo/Order.csv"), parts[2].getBytes());
                     //need help with writing into csv file
                     System.out.println(str);
                 }

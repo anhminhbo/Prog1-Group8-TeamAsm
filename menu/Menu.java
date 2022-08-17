@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Menu {
     protected ArrayList<ProductService> ProductList;
     protected ArrayList<MemberService> MemberList;
-
+    protected MemberService CurrentUser;
     protected final List<Option> options = new ArrayList<>();
 
     protected void addOption(Option option) {
@@ -27,6 +27,9 @@ public class Menu {
         table.display();
     }
 
+    public void setCurrentUser(MemberService currentUser) {
+        CurrentUser = currentUser;
+    }
 
     public void run() {
         welcome();

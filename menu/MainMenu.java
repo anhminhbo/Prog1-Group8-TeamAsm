@@ -93,6 +93,7 @@ public class MainMenu extends Menu {
                     System.out.println(member.getRole());
                     if (Objects.equals(member.getRole(), Role.MEMBER)) {
                         MemberMenu memberMenu = new MemberMenu();
+                        memberMenu.setCurrentUser(member);
                         memberMenu.run();
                     } else {
                         AdminMenu adminMenu = new AdminMenu();
