@@ -4,6 +4,7 @@ package order;
 import repo.RepoService;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -199,11 +200,27 @@ public class OrderService {
                         System.out.println("Type again:");
                         newStatus = scanner.nextLine().trim().toLowerCase();
                     }
-                    System.out.println(parts[2]);
                     parts[2] = newStatus.replace(parts[2], newStatus);
-                    System.out.println(parts[2]);
-                    //need help with writing into csv file
-                    System.out.println(str);
+                    String newString = String.join(",", parts);
+
+
+                    String filePath = "repo/Order.csv";
+                    Scanner sc = new Scanner(new File(filePath));
+                    StringBuffer buffer = new StringBuffer();
+                    while (sc.hasNextLine()) {
+                        buffer.append(sc.nextLine()+System.lineSeparator());
+                    }
+                    String fileContents = buffer.toString();
+                    System.out.println("Contents of the file: "+fileContents);
+                    sc.close();
+                    String oldLine = str;
+                    String newLine = newString;
+                    fileContents = fileContents.replaceAll(oldLine, newLine);
+                    FileWriter writer = new FileWriter(filePath);
+                    System.out.println("");
+                    System.out.println("new data: \n"+fileContents);
+                    writer.append(fileContents);
+                    writer.flush();
                 }
             }
         }
