@@ -1,6 +1,7 @@
 package repo;
 
 import User.MemberService;
+import order.OrderService;
 import product.ProductService;
 
 import java.io.*;
@@ -59,6 +60,30 @@ public class RepoService {
         return memberList;
     }
 
+    public ArrayList<OrderService> readOrderList() {
+        String orderItem = "";
+        ArrayList<OrderService> orderList = new ArrayList<>();
+        try {
+            BufferedReader orderReader = new BufferedReader(new FileReader("repo/Order.csv"));
+            while (orderItem != null) {
+                if ((orderItem = orderReader.readLine()) == null) {
+                    continue;
+                }
+                String[] singleItem = orderItem.split(",");
+                OrderService newOrder = new OrderService(
+                        Integer.parseInt(singleItem[0]),
+                        Integer.parseInt(singleItem[1]),
+                        Boolean.parseBoolean(singleItem[2]),
+                        singleItem[3]
+                );
+                orderList.add(newOrder);
+            }
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+        return orderList;
+    }
+
     public void writeIntoProductFile(ArrayList<ProductService> ProductList, boolean append) {
         try {
             BufferedWriter DataWriter =
@@ -83,4 +108,5 @@ public class RepoService {
             e.printStackTrace();
         }
     }
+
 }

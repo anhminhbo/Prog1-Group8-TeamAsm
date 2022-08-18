@@ -40,8 +40,22 @@ public class OrderService {
         this.cusID = cusID;
         this.paidStatus = false;
 //        this.productList = productList.split(" ");
+    }
 
+    public int getOrderID() {
+        return orderID;
+    }
 
+    public int getCusID() {
+        return cusID;
+    }
+
+    public boolean isPaidStatus() {
+        return paidStatus;
+    }
+
+    public StringBuilder getProductList() {
+        return productList;
     }
 
     public String[] getProduct() {
@@ -132,7 +146,7 @@ public class OrderService {
         }
     }
 
-    public void getOrderByCustomerID() {
+    public static void getOrderByCustomerID() {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Type in the ID of the order: ");
@@ -159,7 +173,7 @@ public class OrderService {
             e.printStackTrace();
         }
     }
-    public void changePaidStatus() {
+    public static void changePaidStatus() {
         try {
             Scanner scanner = new Scanner(System.in);
             System.out.println("Type in the ID of the order: ");
