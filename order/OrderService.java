@@ -2,11 +2,11 @@ package order;
 
 
 import repo.RepoService;
+import tableFormatter.TableFormatterService;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,12 +19,21 @@ public class OrderService {
     private static RepoService repo;
     private int orderID;
     private final int cusID;
+    public OrderService(int cusID, RepoService repo) {
+        this.cusID = cusID;
+        if (OrderService.repo == null) OrderService.repo = repo;
+    }
     private boolean paidStatus;
     //    private String[] productList;
-    private StringBuilder productList = new StringBuilder();
+    private final StringBuilder productList = new StringBuilder();
 
-    public OrderService(int cusID) {
-        this.cusID = cusID;
+    public static void pressEnterToContinue(){
+        System.out.println("Press Enter key to continue...");
+        try{
+            System.in.read();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
@@ -43,29 +52,37 @@ public class OrderService {
 //        this.productList = productList.split(" ");
     }
 
-    public int getOrderID() {
-        return orderID;
+    public static String productFormat(String[] orderElement, String orderInfo){
+        String[] item = orderElement[3].split(" ");
+        StringWriter orderFormat = new StringWriter();
+        for (int i = 0; i < item.length - 1; i++) {
+            if (i % 2 == 0) {
+                orderFormat.append(item[i]).append("x").append(item[i + 1]);
+            } else {
+                orderFormat.append("; ");
+            }
+        }
+        return orderInfo.replace(orderElement[3],orderFormat.toString());
     }
 
-    public int getCusID() {
-        return cusID;
-    }
-
-    public boolean isPaidStatus() {
-        return paidStatus;
-    }
-
-    public StringBuilder getProductList() {
-        return productList;
-    }
-
-    public String[] getProduct() {
+    public String[] getOrder() {
         return new String[] {
                 Integer.toString(this.orderID),
                 Integer.toString(this.cusID),
                 Boolean.toString(paidStatus),
                 String.valueOf(this.productList)
         };
+    }
+
+    public static String[] readOrderList() {
+        return repo.readOrderList();
+    }
+
+    private static final String[] labelFields = {
+            "Order ID", "User ID", "Paid Status", "Products"
+    };
+    public static String[] getLabelFields() {
+        return labelFields;
     }
 
     public void createOrder() {
@@ -93,9 +110,6 @@ public class OrderService {
                     break;
                 } else assert true;
             }
-//            System.out.println("You entered: " + productID);
-//            System.out.println("You entered: " + productQuantity);
-
             StringBuilder newString = new StringBuilder();
             for (int i = 0; i < productID.size(); i++) {
                 newString.append(productID.get(i).toString()).append(" ");
@@ -104,16 +118,18 @@ public class OrderService {
 //            System.out.println(newString.substring(0, newString.length() - 1));
             FileWriter pw = new FileWriter("repo/Order.csv");
             Path path = Paths.get("repo/Order.csv");
-            long lines = Files.lines(path).count();
-            pw.append((char) (lines + 1));
-
-            pw.append(", ");
-            pw.append((char) this.cusID);
-            pw.append(", ");
-            pw.append("false");
-            pw.append(", ");
-            pw.append(newString.substring(0, newString.length() - 1));
-
+            try {
+                long lines = Files.lines(path).count();
+                pw.append((char) (lines + 1));
+                pw.append(", ");
+                pw.append((char) this.cusID);
+                pw.append(", ");
+                pw.append("false");
+                pw.append(", ");
+                pw.append(newString.substring(0, newString.length() - 1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,26 +137,23 @@ public class OrderService {
 
     public void getOrderByOrderID() {
         try {
-            Scanner scanner = new Scanner(System.in);
             System.out.println("Type in the ID of the order: ");
+            Scanner scanner = new Scanner(System.in);
             String orderID = scanner.nextLine().trim();
-            List<String> listOfStrings = new ArrayList<>();
-            BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
-            String line = bf.readLine();
-            while (line != null) {
-                listOfStrings.add(line);
-                line = bf.readLine();
-            }
-            bf.close();
-            String[] array = listOfStrings.toArray(new String[0]);
-            for (String str : array) {
-                String[] parts = str.split(",");
-                if (orderID.equals(parts[0])){
+            String[] array = readOrderList();
+            String[] orderArray = new String[0];
+            for (String orderInfo : array) {
+                String[] orderElement = orderInfo.split(",");
+                if (orderID.equals(orderElement[0])) {
                     System.out.println("Here is your order:");
-                    System.out.println(str);
+                    orderArray = productFormat(orderElement,orderInfo).split(",");
                     break;
                 }
             }
+            TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
+            tableFormatter.addRows(orderArray);
+            tableFormatter.display();
+            pressEnterToContinue();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -149,26 +162,23 @@ public class OrderService {
 
     public static void getOrderByCustomerID() {
         try {
-            Scanner scanner = new Scanner(System.in);
             System.out.println("Type in the ID of the order: ");
+            Scanner scanner = new Scanner(System.in);
             String orderID = scanner.nextLine().trim();
-            List<String> listOfStrings = new ArrayList<>();
-            BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
-            String line = bf.readLine();
-            while (line != null) {
-                listOfStrings.add(line);
-                line = bf.readLine();
-            }
-            bf.close();
-            String[] array = listOfStrings.toArray(new String[0]);
-            for (String str : array) {
-                String[] parts = str.split(",");
-                if (orderID.equals(parts[0])){
+            String[] array = readOrderList();
+            String[] orderArray = new String[0];
+            for (String orderInfo : array) {
+                String[] orderElement = orderInfo.split(",");
+                if (orderID.equals(orderElement[0])){
                     System.out.println("Here is the order:");
-                    System.out.println(str);
-
+                    System.out.println(orderInfo);
+                    orderArray = productFormat(orderElement,orderInfo).split(",");
                 }
             }
+            TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
+            tableFormatter.addRows(orderArray);
+            tableFormatter.display();
+            pressEnterToContinue();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -177,22 +187,13 @@ public class OrderService {
     public static void changePaidStatus() {
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Type in the ID of the order: ");
             String orderID = scanner.nextLine().trim();
-            List<String> listOfStrings = new ArrayList<>();
-            BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
-            String line = bf.readLine();
-            while (line != null) {
-                listOfStrings.add(line);
-                line = bf.readLine();
-            }
-            bf.close();
-            String[] array = listOfStrings.toArray(new String[0]);
-            for (String str : array) {
-                String[] parts = str.split(",");
-                if (orderID.equals(parts[0])){
+            String[] array = readOrderList();
+            for (String orderInfo : array) {
+                String[] orderElement = orderInfo.split(",");
+                if (orderID.equals(orderElement[0])){
                     System.out.println("Here is the order:");
-                    System.out.println(str);
+                    System.out.println(orderInfo);
                     System.out.println("What do you want to change the paid status into? (true/false)");
                     String newStatus = scanner.nextLine().trim().toLowerCase();
                     while (!newStatus.equals("true") && !newStatus.equals("false")) {
@@ -200,33 +201,31 @@ public class OrderService {
                         System.out.println("Type again:");
                         newStatus = scanner.nextLine().trim().toLowerCase();
                     }
-                    parts[2] = newStatus.replace(parts[2], newStatus);
-                    String newString = String.join(",", parts);
+                    orderElement[2] = newStatus.replace(orderElement[2], newStatus);
+                    String newString = String.join(",", orderElement);
 
 
                     String filePath = "repo/Order.csv";
                     Scanner sc = new Scanner(new File(filePath));
-                    StringBuffer buffer = new StringBuffer();
+                    StringBuilder buffer = new StringBuilder();
                     while (sc.hasNextLine()) {
-                        buffer.append(sc.nextLine()+System.lineSeparator());
+                        buffer.append(sc.nextLine()).append(System.lineSeparator());
                     }
                     String fileContents = buffer.toString();
                     System.out.println("Contents of the file: "+fileContents);
                     sc.close();
-                    String oldLine = str;
-                    String newLine = newString;
-                    fileContents = fileContents.replaceAll(oldLine, newLine);
+                    fileContents = fileContents.replaceAll(orderInfo, newString);
                     FileWriter writer = new FileWriter(filePath);
-                    System.out.println("");
+                    System.out.println();
                     System.out.println("new data: \n"+fileContents);
                     writer.append(fileContents);
                     writer.flush();
                 }
             }
+            pressEnterToContinue();
         }
         catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

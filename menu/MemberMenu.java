@@ -4,8 +4,14 @@ import utils.Option;
 import order.*;
 
 public class MemberMenu extends Menu {
-    public MemberMenu() {
-        OrderService orderService = new OrderService(CurrentUser.getMemberID());
+    private int memberID;
+
+    public int getMemberID() {
+        return memberID;
+    }
+
+    public MemberMenu(int memberID) {
+        OrderService orderService = new OrderService(memberID, super.getRepo());
         this.addOption(new Option("1", "Create order", orderService::createOrder));
 
         this.addOption(new Option("2", "Search order", orderService::getOrderByOrderID));
