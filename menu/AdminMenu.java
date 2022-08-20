@@ -3,6 +3,7 @@ package menu;
 import User.MemberService;
 import product.ProductService;
 import utils.Option;
+import order.*;
 
 public class AdminMenu extends Menu {
 
@@ -17,9 +18,11 @@ public class AdminMenu extends Menu {
         this.addOption(new Option("3", "Update product price", productService::updatePrice));
         this.addOption(new Option("4", "View all products", productService::viewAllProducts));
         this.addOption(new Option("5", "View all members", memberService::viewAllMembers));
+        this.addOption(new Option("6", "Get all orders from customer", OrderService::getOrderByCustomerID));
+        this.addOption(new Option("7", "Change the status of the Order", OrderService::changePaidStatus));
         this.addOption(
                 new Option(
-                        "6",
+                        "8",
                         "Log out",
                         () -> {
                             MainMenu mainMenu = new MainMenu();
@@ -28,7 +31,7 @@ public class AdminMenu extends Menu {
                         }));
         this.addOption(
                 new Option(
-                        "7",
+                        "9",
                         "Exit the program",
                         () -> {
                             System.out.println("Good bye see you again.");

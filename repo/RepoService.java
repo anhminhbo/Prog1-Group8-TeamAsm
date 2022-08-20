@@ -5,6 +5,7 @@ import product.ProductService;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RepoService {
     // initialize and read data from svc files
@@ -59,6 +60,23 @@ public class RepoService {
         return memberList;
     }
 
+    public String[] readOrderList() {
+        String[] array;
+        try {
+            List<String> listOfStrings = new ArrayList<>();
+            BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
+            String line = bf.readLine();
+            while (line != null) {
+                listOfStrings.add(line);
+                line = bf.readLine();
+            }
+            bf.close();
+            array = listOfStrings.toArray(new String[0]);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return array;
+    }
     public void writeIntoProductFile(ArrayList<ProductService> ProductList, boolean append) {
         try {
             BufferedWriter DataWriter =
@@ -83,4 +101,5 @@ public class RepoService {
             e.printStackTrace();
         }
     }
+
 }
