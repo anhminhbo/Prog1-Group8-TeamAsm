@@ -1,12 +1,20 @@
 package menu;
 
 import utils.Option;
+import order.*;
 
 public class MemberMenu extends Menu {
+    private int memberID;
+
+    public int getMemberID() {
+        return memberID;
+    }
+
     public MemberMenu() {
-        this.addOption(new Option("1", "Option 1 MemberMenu", () -> {
-            System.out.println("Callback function for MemberMenu here");
-        }));
+        OrderService orderService = new OrderService(super.getRepo());
+        this.addOption(new Option("1", "Create order", orderService::createOrder));
+
+        this.addOption(new Option("2", "Search order", orderService::getOrderByOrderID));
         this.addOption(new Option("5", "Log out", () ->
         {
             MainMenu mainMenu = new MainMenu();

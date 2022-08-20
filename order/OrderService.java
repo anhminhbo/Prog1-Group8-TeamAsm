@@ -3,10 +3,11 @@ package order;
 import User.MemberService;
 import product.ProductService;
 import repo.RepoService;
+import tableFormatter.TableFormatterService;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class OrderService {
     private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status"};
@@ -17,7 +18,45 @@ public class OrderService {
     private String productList = "";
 
     public OrderService(RepoService repo) {
-        if (OrderService.repo == null) OrderService.repo = repo;
+        if (OrderService.repo == null){
+            OrderService.repo = repo;
+        }
+    }
+
+    public int getOrderID() {
+        return orderID;
+    }
+
+    public int getCusID() {
+        return cusID;
+    }
+
+    public boolean getPaidStatus() {
+        return paidStatus;
+    }
+
+    public String getProductList() {
+        return productList;
+    }
+
+    public void setPaidStatus(boolean paidStatus) {
+        this.paidStatus = paidStatus;
+    }
+
+    public String convertProductList(){
+        String res = productList;
+        res = res.replace('x', ' ');
+        res = res.replace(';', ' ');
+        return res;
+    }
+
+    public static void pressEnterToContinue(){
+        System.out.println("Press Enter key to continue...");
+        try{
+            System.in.read();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
@@ -38,20 +77,30 @@ public class OrderService {
         return labelFields;
     }
 
-    public String[] getProduct() {
-        return new String[] {
-            Integer.toString(this.orderID),
-            Integer.toString(this.cusID),
-            Boolean.toString(paidStatus),
-            String.valueOf(this.productList)
+    public String toDataLine(){
+        return this.orderID
+                + ","
+                + this.cusID
+                + ","
+                + this.paidStatus
+                + ","
+                + convertProductList()
+                + "\n";
+    }
+
+    public String[] getOrderRow(){
+        return new String[]{
+                String.valueOf(this.orderID),
+                String.valueOf(this.cusID),
+                (this.paidStatus ? "Paid" : "Unpaid")
         };
     }
 
     public void createOrder() {
         try {
             Scanner scanner = new Scanner(System.in);
-            List<Integer> productID = new ArrayList<>();
-            List<Integer> productQuantity = new ArrayList<>();
+            ArrayList <Integer> productID = new ArrayList<>();
+            ArrayList <Integer> productQuantity = new ArrayList<>();
             String input;
             while (true) {
                 System.out.println("Enter the ID of the product: ");
@@ -72,9 +121,6 @@ public class OrderService {
                     break;
                 } else assert true;
             }
-            System.out.println("You entered: " + productID);
-            System.out.println("You entered: " + productQuantity);
-
             StringBuilder newString = new StringBuilder();
             for (int i = 0; i < productID.size(); i++) {
                 newString.append(productID.get(i).toString()).append(" ");
@@ -103,59 +149,85 @@ public class OrderService {
         return res;
     }
 
-    public void setPaidStatus(boolean paidStatus) {
-        if (this.paidStatus) return;
-        this.paidStatus = paidStatus;
+    public void getOrderByOrderID() {
+        System.out.print("Enter order ID: ");
+        Scanner scanner = new Scanner(System.in);
+        String orderID = scanner.nextLine().trim();
+        TableFormatterService tableFormatter =
+                new TableFormatterService(OrderService.getLabelFields());
+        ArrayList<OrderService> OrderList = repo.readOrderList();
+        for (OrderService order: OrderList){
+            if (order.getOrderID() != Integer.parseInt(orderID)) continue;
+            tableFormatter.addRows(order.getOrderRow());
+        }
+        tableFormatter.display();
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+    }
+
+    public void getOrderByCustomerID() {
+        System.out.print("Enter customer ID: ");
+        Scanner scanner = new Scanner(System.in);
+        String cusID = scanner.nextLine().trim();
+        TableFormatterService tableFormatter =
+                new TableFormatterService(OrderService.getLabelFields());
+        ArrayList<OrderService> OrderList = repo.readOrderList();
+        for (OrderService order: OrderList){
+            if (order.getCusID() != Integer.parseInt(cusID)) continue;
+            tableFormatter.addRows(order.getOrderRow());
+        }
+        tableFormatter.display();
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+    }
+
+    public void changePaidStatus() {
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter order ID: ");
+        int orderID = scanner.nextInt();
+        ArrayList<OrderService> OrderList = repo.readOrderList();
         ArrayList<MemberService> MemberList = repo.readUserList();
+        TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
+        boolean paidStatus = false;
+        int memberID = 0;
+        float totalPrice = 0;
+
+        for (OrderService Order: OrderList){
+            if (orderID == Order.getOrderID()){
+                memberID = Order.getCusID();
+                totalPrice = Order.getTotalPrice();
+                tableFormatter.addRows(Order.getOrderRow());
+                System.out.println("Here is the order:");
+                tableFormatter.display();
+                System.out.print("Enter paid status (Paid(P)/ Unpaid(U): ");
+                String newStatus = scanner.next().trim().toLowerCase();
+                while (!newStatus.equals("p") && !newStatus.equals("u")) {
+                    System.out.println("Wrong paid status.");
+                    System.out.println("Enter again:");
+                    newStatus = scanner.nextLine().trim().toLowerCase();
+                }
+                paidStatus = (newStatus.equals("p"));
+                if (Order.getPaidStatus() == paidStatus) return;
+                Order.setPaidStatus(paidStatus);
+                break;
+            }
+        }
+        repo.writeIntoOrderFile(OrderList, false);
+
         for (MemberService Member: MemberList){
-            if (this.cusID == Member.getMemberID()){
-                Member.updateAccumulatedMoney(getTotalPrice());
+            if (Member.getMemberID() == memberID){
+                Member.updateAccumulatedMoney(totalPrice, paidStatus);
                 Member.updateMemberShip();
                 break;
             }
         }
         repo.writeIntoUserFile(MemberList, false);
-    }
-
-    public int getOrderID() {
-        return orderID;
-    }
-
-    public int getCusID() {
-        return cusID;
-    }
-
-    public boolean getPaidStatus() {
-        return paidStatus;
-    }
-
-    public String getProductList() {
-        return productList;
-    }
-
-    public String convertProductList(){
-        String res = productList;
-        res = res.replace('x', ' ');
-        res = res.replace(';', ' ');
-        return res;
-    }
-
-    public String toDataLine(){
-        return this.orderID
-                + ","
-                + this.cusID
-                + ","
-                + this.paidStatus
-                + ","
-                + convertProductList()
-                + "\n";
-    }
-
-    public static void main(String[] args) {
-        ArrayList<OrderService> OrderList = repo.readOrderList();
-        for (OrderService order: OrderList){
-            order.setPaidStatus(true);
-        }
-        repo.writeIntoOrderFile(OrderList, false);
     }
 }

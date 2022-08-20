@@ -26,17 +26,6 @@ public class MemberService {
 
     public MemberService(
             int memberID, String userName, String password, String fullName, String phoneNumber, float accumulatedMoney) {
-        // validation check
-        //        if (!memberShip.equalsIgnoreCase("Gold")
-        //                && !memberShip.equalsIgnoreCase("Silver")
-
-        //                && !memberShip.equalsIgnoreCase("Platinum")
-        //                && !memberShip.equalsIgnoreCase("None")) {
-        //            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
-        //        }
-        //        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
-        //            throw new WrongInputRole("Two roles expected Member or Admin");
-        //        }
 
         this.memberID = memberID;
         this.userName = userName.trim();
@@ -55,17 +44,6 @@ public class MemberService {
             String phoneNumber,
             String memberShip,
             float accumulatedMoney) {
-        // validation check
-        //        if (!memberShip.equalsIgnoreCase("Gold")
-        //                && !memberShip.equalsIgnoreCase("Silver")
-
-        //                && !memberShip.equalsIgnoreCase("Platinum")
-        //                && !memberShip.equalsIgnoreCase("None")) {
-        //            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
-        //        }
-        //        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
-        //            throw new WrongInputRole("Two roles expected Member or Admin");
-        //        }
 
         this.memberID = memberID;
         this.userName = userName.trim();
@@ -136,8 +114,8 @@ public class MemberService {
         return accumulatedMoney;
     }
 
-    public void updateAccumulatedMoney(float totalPriceOfOrder) {
-        this.accumulatedMoney += totalPriceOfOrder;
+    public void updateAccumulatedMoney(float totalPriceOfOrder, boolean isAddition) {
+        this.accumulatedMoney += (isAddition ? totalPriceOfOrder : -totalPriceOfOrder);
     }
 
     public void updateMemberShip() {
