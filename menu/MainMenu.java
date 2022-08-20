@@ -41,7 +41,7 @@ public class MainMenu extends Menu {
             String phoneNumber = snc.nextLine();
             MemberService newUser = new MemberService(memberService.getMemberList().size() + 1,
                     userName, password, fullName,
-                    phoneNumber, 0);
+                    phoneNumber);
             BufferedWriter userWriter = new BufferedWriter(new FileWriter("repo/User.csv",
                     true));
             if (checkIfUserExist(newUser)) {
@@ -73,7 +73,7 @@ public class MainMenu extends Menu {
                         AdminMenu adminMenu = new AdminMenu();
                         adminMenu.run();
                     } else {
-                        MemberMenu memberMenu = new MemberMenu();
+                        MemberMenu memberMenu = new MemberMenu(member.getMemberID());
                         memberMenu.run();
                     }
                 }
