@@ -4,20 +4,23 @@ import User.MemberService;
 import product.ProductService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
+import utils.Convert;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class OrderService {
-    private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status"};
+    private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status", "Product - Quantity", "Total Price"};
     private static RepoService repo = new RepoService();
     private int orderID;
     private int cusID;
     private boolean paidStatus;
     private String productList = "";
+    private double totalPrice;
 
-    public OrderService(RepoService repo) {
+    public OrderService(int memberID, RepoService repo) {
+        this.cusID = memberID;
         if (OrderService.repo == null){
             OrderService.repo = repo;
         }
@@ -43,6 +46,10 @@ public class OrderService {
         this.paidStatus = paidStatus;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
     public String convertProductList(){
         String res = productList;
         res = res.replace('x', ' ');
@@ -50,16 +57,7 @@ public class OrderService {
         return res;
     }
 
-    public static void pressEnterToContinue(){
-        System.out.println("Press Enter key to continue...");
-        try{
-            System.in.read();
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public OrderService(int orderID, int cusID, boolean paidStatus, String productList) {
+    public OrderService(int orderID, int cusID, boolean paidStatus, String productList, double totalPrice) {
         String[] item = productList.split(" ");
         for (int i = 0; i < item.length - 1; i++) {
             if (i % 2 == 0) {
@@ -71,6 +69,7 @@ public class OrderService {
         this.orderID = orderID;
         this.cusID = cusID;
         this.paidStatus = paidStatus;
+        this.totalPrice = totalPrice;
     }
 
     public static String[] getLabelFields() {
@@ -85,14 +84,30 @@ public class OrderService {
                 + this.paidStatus
                 + ","
                 + convertProductList()
+                + ","
+                + Convert.toDecimal(this.totalPrice)
                 + "\n";
     }
 
     public String[] getOrderRow(){
+        ArrayList<ProductService> ProductList = repo.readProductList();
+        String[] products = this.productList.split(";");
+        String listOfProduct = "";
+        for (String product: products) {
+            String[] temp = product.split("x");
+            for (ProductService Product: ProductList){
+                if (Integer.parseInt(temp[0]) == Product.getProductID()){
+                    listOfProduct += Product.getProductName() + " - " + temp[1] + "; ";
+                    break;
+                }
+            }
+        }
         return new String[]{
                 String.valueOf(this.orderID),
                 String.valueOf(this.cusID),
-                (this.paidStatus ? "Paid" : "Unpaid")
+                (this.paidStatus ? "Paid" : "Unpaid"),
+                listOfProduct,
+                Convert.toDecimal(this.totalPrice)
         };
     }
 
@@ -101,15 +116,30 @@ public class OrderService {
             Scanner scanner = new Scanner(System.in);
             ArrayList <Integer> productID = new ArrayList<>();
             ArrayList <Integer> productQuantity = new ArrayList<>();
+            ArrayList <ProductService> ProductList = repo.readProductList();
+            ArrayList <MemberService> MemberList = repo.readUserList();
+            TableFormatterService tableFormatter = new TableFormatterService(ProductService.getLabelFields());
+            for (ProductService product: ProductList){
+                tableFormatter.addRows(product.toProductRow());
+            }
+            tableFormatter.display();
+
             String input;
+            double totalPrice = 0;
             while (true) {
-                System.out.println("Enter the ID of the product: ");
+                System.out.print("Enter product ID: ");
                 int pID = scanner.nextInt();
                 // check if the product exist and still available
-                System.out.println("Enter the desired quantity: ");
+                System.out.print("Enter the desired quantity: ");
                 int pQuantity = scanner.nextInt();
                 productID.add(pID);
                 productQuantity.add(pQuantity);
+                for (ProductService product: ProductList){
+                    if (product.getProductID() == pID){
+                        totalPrice += product.getPrice() * pQuantity;
+                        break;
+                    }
+                }
                 System.out.println("Do you want to buy anything else (Y/N): ");
                 Scanner myObj = new Scanner(System.in);
                 input = myObj.nextLine().trim();
@@ -126,27 +156,28 @@ public class OrderService {
                 newString.append(productID.get(i).toString()).append(" ");
                 newString.append(productQuantity.get(i).toString()).append(" ");
             }
+
+            // Get Discount
+            for (MemberService Member: MemberList){
+                if (cusID == Member.getMemberID()){
+                    System.out.println(Member.getMemberShip());
+                    switch (Member.getMemberShip()) {
+                        case "Platinum" -> totalPrice -= totalPrice * 0.15;
+                        case "Gold" -> totalPrice -= totalPrice * 0.1;
+                        case "Silver" -> totalPrice -= totalPrice * 0.05;
+                    }
+                    System.out.println(totalPrice);
+                    break;
+                }
+            }
+
+            ArrayList<OrderService> newData = new ArrayList<>();
+            newData.add(new OrderService(repo.readOrderList().size() + 1, this.cusID, false, newString.toString(), totalPrice));
+            repo.writeIntoOrderFile(newData, true);
             System.out.println(newString.substring(0, newString.length() - 1));
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public float getTotalPrice(){
-        ArrayList<ProductService> ProductList = repo.readProductList();
-        String[] products = this.productList.split(";");
-        float res = 0;
-        for (String product: products){
-            String[] temp = product.split("x");
-            System.out.println(temp[0] + " " + temp[1]);
-            for (ProductService Product: ProductList){
-                if (Integer.parseInt(temp[0]) == Product.getProductID()){
-                    res += Product.getPrice() * Integer.parseInt(temp[1]);
-                    break;
-                }
-            }
-        }
-        return res;
     }
 
     public void getOrderByOrderID() {
@@ -197,7 +228,7 @@ public class OrderService {
         TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
         boolean paidStatus = false;
         int memberID = 0;
-        float totalPrice = 0;
+        double totalPrice = 0;
 
         for (OrderService Order: OrderList){
             if (orderID == Order.getOrderID()){

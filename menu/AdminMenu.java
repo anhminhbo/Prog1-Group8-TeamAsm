@@ -11,7 +11,7 @@ public class AdminMenu extends Menu {
     public AdminMenu() {
         ProductService productService = new ProductService(super.getRepo());
         MemberService memberService = new MemberService(super.getRepo());
-        OrderService orderService = new OrderService(super.getRepo());
+        OrderService orderService = new OrderService(memberService.getMemberID(), super.getRepo());
 
         this.addOption(
                 new Option("1", "Add new product to the store", productService::addNewProduct));
