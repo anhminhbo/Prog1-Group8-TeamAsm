@@ -18,13 +18,14 @@ public class MemberService {
     private String fullName;
     private String phoneNumber;
     private String memberShip;
+    private float accumulatedMoney;
 
     public MemberService(RepoService repo) {
         if (MemberService.repo == null) MemberService.repo = repo;
     }
 
     public MemberService(
-            int memberID, String userName, String password, String fullName, String phoneNumber) {
+            int memberID, String userName, String password, String fullName, String phoneNumber, float accumulatedMoney) {
         // validation check
         //        if (!memberShip.equalsIgnoreCase("Gold")
         //                && !memberShip.equalsIgnoreCase("Silver")
@@ -43,6 +44,7 @@ public class MemberService {
         this.fullName = fullName.trim();
         this.phoneNumber = phoneNumber;
         this.memberShip = Membership.None;
+        this.accumulatedMoney = 0;
     }
 
     public MemberService(
@@ -51,7 +53,8 @@ public class MemberService {
             String password,
             String fullName,
             String phoneNumber,
-            String memberShip) {
+            String memberShip,
+            float accumulatedMoney) {
         // validation check
         //        if (!memberShip.equalsIgnoreCase("Gold")
         //                && !memberShip.equalsIgnoreCase("Silver")
@@ -70,6 +73,7 @@ public class MemberService {
         this.fullName = fullName.trim();
         this.phoneNumber = phoneNumber;
         this.memberShip = memberShip;
+        this.accumulatedMoney = accumulatedMoney;
     }
 
     public static String[] getLabelFields() {
@@ -128,6 +132,26 @@ public class MemberService {
         this.memberShip = memberShip;
     }
 
+    public float getAccumulatedMoney() {
+        return accumulatedMoney;
+    }
+
+    public void updateAccumulatedMoney(float totalPriceOfOrder) {
+        this.accumulatedMoney += totalPriceOfOrder;
+    }
+
+    public void updateMemberShip() {
+        if (accumulatedMoney > 25000000){
+            setMemberShip("Platinum");
+        } else if (accumulatedMoney > 10000000) {
+            setMemberShip("Gold");
+        } else if (accumulatedMoney > 5000000) {
+            setMemberShip("Silver");
+        } else {
+            setMemberShip("None");
+        }
+    }
+
     public String toDataLine() {
         return this.memberID
                 + ","
@@ -139,7 +163,10 @@ public class MemberService {
                 + ","
                 + this.phoneNumber
                 + ","
-                + this.memberShip;
+                + this.memberShip
+                + ","
+                + this.accumulatedMoney
+                + "\n";
     }
 
     public String[] getMember() {
@@ -149,7 +176,8 @@ public class MemberService {
             this.password,
             this.fullName,
             this.phoneNumber,
-            this.memberShip
+            this.memberShip,
+            Float.toString(this.accumulatedMoney)
         };
     }
 

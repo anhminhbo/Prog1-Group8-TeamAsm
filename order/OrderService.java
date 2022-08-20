@@ -1,6 +1,4 @@
 package order;
-
-
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
 
@@ -15,15 +13,16 @@ import java.util.List;
 import java.util.Scanner;
 
 public class OrderService {
-    //    private String[] productList;
+    private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status"};
+    private static RepoService repo = new RepoService();
     private static RepoService repo;
     private int orderID;
     private final int cusID;
+    private boolean paidStatus;
     public OrderService(int cusID, RepoService repo) {
         this.cusID = cusID;
         if (OrderService.repo == null) OrderService.repo = repo;
     }
-    private boolean paidStatus;
     //    private String[] productList;
     private final StringBuilder productList = new StringBuilder();
 
@@ -92,18 +91,18 @@ public class OrderService {
             List<Integer> productQuantity = new ArrayList<>();
             String input;
             while (true) {
-                System.out.println("Type in the ID of the product: ");
+                System.out.println("Enter the ID of the product: ");
                 int pID = scanner.nextInt();
                 // add check if the product exist and still available
                 System.out.println("How many you want to buy: ");
                 int pQuantity = scanner.nextInt();
                 productID.add(pID);
                 productQuantity.add(pQuantity);
-                System.out.println("Do you want to buy anything else (Y/N):");
+                System.out.println("Do you want to buy anything else (Y/N): ");
                 Scanner myObj = new Scanner(System.in);
                 input = myObj.nextLine().trim();
                 while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) {
-                    System.out.println("Please type in Y or N:");
+                    System.out.println("Please type in Y or N: ");
                     input = myObj.nextLine().trim();
                 }
                 if (input.equalsIgnoreCase("N")) {

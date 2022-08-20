@@ -1,14 +1,40 @@
 package repo;
 
 import User.MemberService;
+import order.OrderService;
 import product.ProductService;
 
 import java.io.*;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepoService {
     // initialize and read data from svc files
+    public ArrayList<OrderService> readOrderList() {
+        String orderItem = "";
+        ArrayList<OrderService> orderList = new ArrayList<>();
+        try {
+            BufferedReader orderReader = new BufferedReader(new FileReader("repo/Order.csv"));
+            while (orderItem != null) {
+                if ((orderItem = orderReader.readLine()) == null) {
+                    continue;
+                }
+                String[] singleItem = orderItem.split(",");
+                OrderService newOrder =
+                        new OrderService(
+                                Integer.parseInt(singleItem[0]),
+                                Integer.parseInt(singleItem[1]),
+                                Boolean.parseBoolean(singleItem[2]),
+                                singleItem[3]);
+                orderList.add(newOrder);
+            }
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+        return orderList;
+    }
+
     public ArrayList<ProductService> readProductList() {
         String productItem = "";
         ArrayList<ProductService> productList = new ArrayList<>();
@@ -51,7 +77,8 @@ public class RepoService {
                                 singleItem[2],
                                 singleItem[3],
                                 singleItem[4],
-                                singleItem[5]);
+                                singleItem[5],
+                                Float.parseFloat(singleItem[6]));
                 memberList.add(newUser);
             }
         } catch (Exception err) {
@@ -83,6 +110,34 @@ public class RepoService {
                     new BufferedWriter(new FileWriter("repo/Products.csv", append));
             for (ProductService product : ProductList) {
                 DataWriter.write(product.toDataLine());
+            }
+            DataWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public void writeIntoUserFile(ArrayList<MemberService> MemberList, boolean append) {
+        try {
+            BufferedWriter DataWriter =
+                    new BufferedWriter(new FileWriter("repo/User.csv", append));
+            for (MemberService member : MemberList) {
+                DataWriter.write(member.toDataLine());
+            }
+            DataWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+    }
+
+    public void writeIntoOrderFile(ArrayList<OrderService> OrderList, boolean append) {
+        try {
+            BufferedWriter DataWriter =
+                    new BufferedWriter(new FileWriter("repo/Order.csv", append));
+            for (OrderService order : OrderList) {
+                DataWriter.write(order.toDataLine());
             }
             DataWriter.close();
         } catch (IOException e) {
