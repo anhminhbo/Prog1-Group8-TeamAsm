@@ -15,14 +15,22 @@ public class ProductService {
         "Product ID", "Product Name", "Product Category", "Description", "Price"
     };
     private static RepoService repo;
-    private int productID;
+    private String productID;
     private String productName;
     private String productCategory;
     private String description;
     private float price;
 
+    public  ProductService(){
+        this.productID = "UNKNOWN";
+        this.productName = "UNKNOWN";
+        this.productCategory = "UNKNOWN";
+        this.description = "UNKNOWN";
+        this.price = 0;
+    }
+
     public ProductService(RepoService repo) {
-        this.productID = -1;
+        this.productID = "UNKNOWN";
         this.productName = "UNKNOWN";
         this.productCategory = "UNKNOWN";
         this.description = "UNKNOWN";
@@ -31,7 +39,7 @@ public class ProductService {
     }
 
     public ProductService(
-            int productID,
+            String productID,
             String productName,
             String productCategory,
             String description,
@@ -63,13 +71,13 @@ public class ProductService {
         return productCategory;
     }
 
-    public int getProductID() {
+    public String getProductID() {
         return productID;
     }
 
     public String[] getProduct() {
         return new String[] {
-            Integer.toString(this.productID),
+            (this.productID),
             this.productName,
             this.productCategory,
             this.description,
@@ -105,10 +113,12 @@ public class ProductService {
     }
 
     public void viewAllProducts() {
+        //working
         ArrayList<ProductService> ProductList = repo.readProductList();
         TableFormatterService tableFormatter =
                 new TableFormatterService(ProductService.getLabelFields());
         for (ProductService product : ProductList) {
+            if(product.getProductID().equals("UNKNOWN")) continue;
             tableFormatter.addRows(product.getProduct());
         }
         tableFormatter.display();
@@ -181,7 +191,7 @@ public class ProductService {
         System.out.println("-- Add new product --\n");
         Scanner scan = new Scanner(System.in);
 
-        int productID;
+        String productID;
         String productName;
         String productCategory;
         String description;
@@ -189,7 +199,7 @@ public class ProductService {
         // Input
         try {
             System.out.println("Enter product id: ");
-            productID = scan.nextInt();
+            productID = String.valueOf(scan.nextInt());
             scan.nextLine();
             System.out.println("Enter product name: ");
             productName = scan.nextLine();
@@ -215,13 +225,13 @@ public class ProductService {
         Scanner scan = new Scanner(System.in);
         String choice;
         int removeProductIndex = -1;
-        int productID;
+        String productID;
         ArrayList<ProductService> ProductList = repo.readProductList();
 
         //input
         try {
             System.out.print("Enter product id to remove: ");
-            productID = scan.nextInt();
+            productID = String.valueOf(scan.nextInt());
             scan.nextLine();
         } catch (InputMismatchException e) {
             System.out.println("Your input is invalid.\nReturning back...");
@@ -230,7 +240,7 @@ public class ProductService {
 
         //Process
         for (ProductService productService : ProductList) {
-            if (productID == productService.getProductID()) {
+            if (productID.equals(productService.getProductID())) {
                 System.out.println();
                 productService.showProductDetail();
                 System.out.println();
@@ -240,7 +250,9 @@ public class ProductService {
                 } while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("n"));
                 if (choice.equalsIgnoreCase("y")) {
                     removeProductIndex = ProductList.indexOf(productService);
-                    ProductList.remove(removeProductIndex);
+                    //working
+//                    ProductList.remove(removeProductIndex);
+                    ProductList.set(removeProductIndex, new ProductService());
                     repo.writeIntoProductFile(ProductList, false);
                     System.out.println("The product list has been updated. Returning back...");
                 }
@@ -261,10 +273,10 @@ public class ProductService {
         Scanner scan = new Scanner(System.in);
 
         // Input
-        int productID;
+        String productID;
         try {
             System.out.print("Enter your desired product id: ");
-            productID = scan.nextInt();
+            productID = String.valueOf(scan.nextInt());
         } catch (InputMismatchException e) {
             System.out.println("Your input is invalid.\nReturning back...");
             return;
@@ -275,7 +287,7 @@ public class ProductService {
         ArrayList<ProductService> ProductList = repo.readProductList();
         // Process
         for (ProductService product : ProductList) {
-            if (productID == product.getProductID()) {
+            if (productID.equals(product.getProductID())) {
                 product.showProductDetail();
                 System.out.println();
 

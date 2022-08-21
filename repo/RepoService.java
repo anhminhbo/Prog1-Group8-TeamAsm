@@ -17,10 +17,14 @@ public class RepoService {
                 if ((productItem = productReader.readLine()) == null) {
                     continue;
                 }
+                if(productItem.equals("")){
+                    productList.add(new ProductService());
+                    continue;
+                }
                 String[] singleItem = productItem.split(",");
                 ProductService newProduct =
                         new ProductService(
-                                Integer.parseInt(singleItem[0]),
+                                singleItem[0],
                                 singleItem[1],
                                 singleItem[2],
                                 singleItem[3],
@@ -64,6 +68,10 @@ public class RepoService {
             BufferedWriter DataWriter =
                     new BufferedWriter(new FileWriter("repo/Products.csv", append));
             for (ProductService product : ProductList) {
+                if(product.getProductID().equals("UNKNOWN")){
+                    DataWriter.write("\n");
+                    continue;
+                }
                 DataWriter.write(product.toDataLine());
             }
             DataWriter.close();
