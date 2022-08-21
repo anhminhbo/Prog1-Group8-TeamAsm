@@ -23,7 +23,7 @@ public class RepoService {
                         new OrderService(
                                 Integer.parseInt(singleItem[0]),
                                 Integer.parseInt(singleItem[1]),
-                                Boolean.parseBoolean(singleItem[2]),
+                                singleItem[2],
                                 singleItem[3],
                                 Double.parseDouble(singleItem[4]));
                 orderList.add(newOrder);
@@ -102,8 +102,7 @@ public class RepoService {
 
     public void writeIntoUserFile(ArrayList<MemberService> MemberList, boolean append) {
         try {
-            BufferedWriter DataWriter =
-                    new BufferedWriter(new FileWriter("repo/User.csv", append));
+            BufferedWriter DataWriter = new BufferedWriter(new FileWriter("repo/User.csv", append));
             for (MemberService member : MemberList) {
                 DataWriter.write(member.toDataLine());
             }
@@ -138,5 +137,4 @@ public class RepoService {
             e.printStackTrace();
         }
     }
-
 }
