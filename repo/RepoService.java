@@ -5,9 +5,7 @@ import order.OrderService;
 import product.ProductService;
 
 import java.io.*;
-import java.lang.reflect.Member;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RepoService {
     // initialize and read data from svc files
@@ -26,7 +24,8 @@ public class RepoService {
                                 Integer.parseInt(singleItem[0]),
                                 Integer.parseInt(singleItem[1]),
                                 Boolean.parseBoolean(singleItem[2]),
-                                singleItem[3]);
+                                singleItem[3],
+                                Double.parseDouble(singleItem[4]));
                 orderList.add(newOrder);
             }
         } catch (Exception err) {
@@ -51,7 +50,7 @@ public class RepoService {
                                 singleItem[1],
                                 singleItem[2],
                                 singleItem[3],
-                                Float.parseFloat(singleItem[4]));
+                                Double.parseDouble(singleItem[4]));
                 productList.add(newProduct);
             }
         } catch (Exception err) {
@@ -78,7 +77,7 @@ public class RepoService {
                                 singleItem[3],
                                 singleItem[4],
                                 singleItem[5],
-                                Float.parseFloat(singleItem[6]));
+                                Double.parseDouble(singleItem[6]));
                 memberList.add(newUser);
             }
         } catch (Exception err) {
@@ -87,23 +86,6 @@ public class RepoService {
         return memberList;
     }
 
-    public String[] readOrderList() {
-        String[] array;
-        try {
-            List<String> listOfStrings = new ArrayList<>();
-            BufferedReader bf = new BufferedReader(new FileReader("repo/Order.csv"));
-            String line = bf.readLine();
-            while (line != null) {
-                listOfStrings.add(line);
-                line = bf.readLine();
-            }
-            bf.close();
-            array = listOfStrings.toArray(new String[0]);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return array;
-    }
     public void writeIntoProductFile(ArrayList<ProductService> ProductList, boolean append) {
         try {
             BufferedWriter DataWriter =

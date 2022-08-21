@@ -3,6 +3,7 @@ package User;
 import constant.Membership;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
+import utils.Convert;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -18,25 +19,14 @@ public class MemberService {
     private String fullName;
     private String phoneNumber;
     private String memberShip;
-    private float accumulatedMoney;
+    private double accumulatedMoney;
 
     public MemberService(RepoService repo) {
         if (MemberService.repo == null) MemberService.repo = repo;
     }
 
     public MemberService(
-            int memberID, String userName, String password, String fullName, String phoneNumber, float accumulatedMoney) {
-        // validation check
-        //        if (!memberShip.equalsIgnoreCase("Gold")
-        //                && !memberShip.equalsIgnoreCase("Silver")
-
-        //                && !memberShip.equalsIgnoreCase("Platinum")
-        //                && !memberShip.equalsIgnoreCase("None")) {
-        //            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
-        //        }
-        //        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
-        //            throw new WrongInputRole("Two roles expected Member or Admin");
-        //        }
+            int memberID, String userName, String password, String fullName, String phoneNumber, double accumulatedMoney) {
 
         this.memberID = memberID;
         this.userName = userName.trim();
@@ -54,18 +44,7 @@ public class MemberService {
             String fullName,
             String phoneNumber,
             String memberShip,
-            float accumulatedMoney) {
-        // validation check
-        //        if (!memberShip.equalsIgnoreCase("Gold")
-        //                && !memberShip.equalsIgnoreCase("Silver")
-
-        //                && !memberShip.equalsIgnoreCase("Platinum")
-        //                && !memberShip.equalsIgnoreCase("None")) {
-        //            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
-        //        }
-        //        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
-        //            throw new WrongInputRole("Two roles expected Member or Admin");
-        //        }
+            double accumulatedMoney) {
 
         this.memberID = memberID;
         this.userName = userName.trim();
@@ -132,12 +111,12 @@ public class MemberService {
         this.memberShip = memberShip;
     }
 
-    public float getAccumulatedMoney() {
+    public double getAccumulatedMoney() {
         return accumulatedMoney;
     }
 
-    public void updateAccumulatedMoney(float totalPriceOfOrder) {
-        this.accumulatedMoney += totalPriceOfOrder;
+    public void updateAccumulatedMoney(double totalPriceOfOrder, boolean isAddition) {
+        this.accumulatedMoney += (isAddition ? totalPriceOfOrder : -totalPriceOfOrder);
     }
 
     public void updateMemberShip() {
@@ -165,7 +144,7 @@ public class MemberService {
                 + ","
                 + this.memberShip
                 + ","
-                + this.accumulatedMoney
+                + Convert.toDecimal(this.accumulatedMoney)
                 + "\n";
     }
 
@@ -177,7 +156,7 @@ public class MemberService {
             this.fullName,
             this.phoneNumber,
             this.memberShip,
-            Float.toString(this.accumulatedMoney)
+            Double.toString(this.accumulatedMoney)
         };
     }
 
