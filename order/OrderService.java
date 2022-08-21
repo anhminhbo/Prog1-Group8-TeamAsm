@@ -1,6 +1,8 @@
 package order;
 
 import User.MemberService;
+import constant.Membership;
+import constant.PaidStatus;
 import product.ProductService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
@@ -29,34 +31,8 @@ public class OrderService {
         }
     }
 
-    public String getOrderID() {
-        return orderID;
-    }
 
-    public String getCusID() {
-        return cusID;
-    }
-
-    public boolean getPaidStatus() {
-        return paidStatus;
-    }
-
-    public void setPaidStatus(boolean paidStatus) {
-        this.paidStatus = paidStatus;
-    }
-
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public String convertProductList(){
-        String res = productList;
-        res = res.replace('x', ' ');
-        res = res.replace(';', ' ');
-        return res;
-    }
-
-    public OrderService(String orderID, String cusID, boolean paidStatus, String productList, double totalPrice) {
+    public OrderService(String orderID, String cusID, String paidStatus, String productList, double totalPrice) {
         String[] item = productList.split(" ");
         for (int i = 0; i < item.length - 1; i++) {
             if (i % 2 == 0) {
@@ -73,6 +49,37 @@ public class OrderService {
 
     public static String[] getLabelFields() {
         return labelFields;
+    }
+
+    public int getOrderID() {
+        return orderID;
+    }
+
+    public String getCusID() {
+        return cusID;
+    }
+
+    public String getPaidStatus() {
+        return paidStatus;
+    }
+
+    public void setPaidStatus(String paidStatus) {
+        this.paidStatus = paidStatus;
+    }
+
+    public String getProductList() {
+        return productList;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public String convertProductList(){
+        String res = productList;
+        res = res.replace('x', ' ');
+        res = res.replace(';', ' ');
+        return res;
     }
 
     public String toDataLine(){
@@ -104,7 +111,7 @@ public class OrderService {
         return new String[]{
                 String.valueOf(this.orderID),
                 String.valueOf(this.cusID),
-                (this.paidStatus ? "Paid" : "Unpaid"),
+                this.paidStatus,
                 listOfProduct,
                 Convert.toDecimal(this.totalPrice)
         };
@@ -161,9 +168,9 @@ public class OrderService {
                 if (cusID.equals(Member.getMemberID())){
                     System.out.println(Member.getMemberShip());
                     switch (Member.getMemberShip()) {
-                        case "Platinum" -> totalPrice -= totalPrice * 0.15;
-                        case "Gold" -> totalPrice -= totalPrice * 0.1;
-                        case "Silver" -> totalPrice -= totalPrice * 0.05;
+                        case Membership.Platinum -> totalPrice -= totalPrice * 0.15;
+                        case Membership.Gold  -> totalPrice -= totalPrice * 0.1;
+                        case Membership.Silver -> totalPrice -= totalPrice * 0.05;
                     }
                     System.out.println(totalPrice);
                     break;
@@ -171,7 +178,7 @@ public class OrderService {
             }
 
             ArrayList<OrderService> newData = new ArrayList<>();
-            newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, false, newString.toString(), totalPrice));
+            newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, PaidStatus.UnPaid, newString.toString(), totalPrice));
             repo.writeIntoOrderFile(newData, true);
             System.out.println(newString.substring(0, newString.length() - 1));
         } catch (Exception e) {
@@ -231,7 +238,7 @@ public class OrderService {
         ArrayList<OrderService> OrderList = repo.readOrderList();
         ArrayList<MemberService> MemberList = repo.readUserList();
         TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
-        boolean paidStatus = false;
+        String paidStatus = PaidStatus.UnPaid;
         String memberID = "";
         double totalPrice = 0;
 
@@ -249,8 +256,8 @@ public class OrderService {
                     System.out.println("Enter again:");
                     newStatus = scanner.nextLine().trim().toLowerCase();
                 }
-                paidStatus = (newStatus.equals("p"));
-                if (Order.getPaidStatus() == paidStatus) return;
+                paidStatus = (newStatus.equals("p")) ? PaidStatus.Paid : PaidStatus.UnPaid;
+                if (Order.getPaidStatus().equals(paidStatus)) return;
                 Order.setPaidStatus(paidStatus);
                 break;
             }
@@ -261,10 +268,11 @@ public class OrderService {
             return;
         }
         repo.writeIntoOrderFile(OrderList, false);
-
+        
+        boolean isAdditionToAccumulatedMoney = paidStatus.equals(PaidStatus.Paid);
         for (MemberService Member: MemberList){
             if (Member.getMemberID().equals(memberID)){
-                Member.updateAccumulatedMoney(totalPrice, paidStatus);
+                Member.updateAccumulatedMoney(totalPrice, isAdditionToAccumulatedMoney);
                 Member.updateMemberShip();
                 break;
             }

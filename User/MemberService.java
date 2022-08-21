@@ -94,14 +94,14 @@ public class MemberService {
     }
 
     public void updateMemberShip() {
-        if (accumulatedMoney > 25000000){
-            setMemberShip("Platinum");
+        if (accumulatedMoney > 25000000) {
+            setMemberShip(Membership.Platinum);
         } else if (accumulatedMoney > 10000000) {
-            setMemberShip("Gold");
+            setMemberShip(Membership.Gold);
         } else if (accumulatedMoney > 5000000) {
-            setMemberShip("Silver");
+            setMemberShip(Membership.Silver);
         } else {
-            setMemberShip("None");
+            setMemberShip(Membership.None);
         }
     }
 

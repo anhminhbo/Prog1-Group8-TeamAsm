@@ -110,8 +110,7 @@ public class RepoService {
 
     public void writeIntoUserFile(ArrayList<MemberService> MemberList, boolean append) {
         try {
-            BufferedWriter DataWriter =
-                    new BufferedWriter(new FileWriter("repo/User.csv", append));
+            BufferedWriter DataWriter = new BufferedWriter(new FileWriter("repo/User.csv", append));
             for (MemberService member : MemberList) {
                 DataWriter.write(member.toDataLine());
             }
@@ -146,5 +145,4 @@ public class RepoService {
             e.printStackTrace();
         }
     }
-
 }

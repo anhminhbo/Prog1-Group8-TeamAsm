@@ -1,8 +1,8 @@
 package menu;
 
 import User.MemberService;
-import product.ProductService;
 import order.OrderService;
+import product.ProductService;
 import utils.Option;
 
 public class AdminMenu extends Menu {
@@ -10,7 +10,7 @@ public class AdminMenu extends Menu {
     public AdminMenu() {
         ProductService productService = new ProductService(super.getRepo());
         MemberService memberService = new MemberService(super.getRepo());
-        OrderService orderService = new OrderService(memberService.getMemberID(), super.getRepo());
+        OrderService orderService = new OrderService(super.getRepo());
 
         this.addOption(
                 new Option("1", "Add new product to the store", productService::addNewProduct));
@@ -19,8 +19,11 @@ public class AdminMenu extends Menu {
         this.addOption(new Option("3", "Update product price", productService::updatePrice));
         this.addOption(new Option("4", "View all products", productService::viewAllProducts));
         this.addOption(new Option("5", "View all members", memberService::viewAllMembers));
-        this.addOption(new Option("6", "Get all orders from customer", orderService::getOrderByCustomerID));
-        this.addOption(new Option("7", "Change the status of the Order", orderService::changePaidStatus));
+        this.addOption(
+                new Option(
+                        "6", "Get all orders from customer", orderService::getOrderByCustomerID));
+        this.addOption(
+                new Option("7", "Change the status of the Order", orderService::changePaidStatus));
         this.addOption(
                 new Option(
                         "8",
