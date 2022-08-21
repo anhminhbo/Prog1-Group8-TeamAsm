@@ -23,7 +23,7 @@ public class RepoService {
                         new OrderService(
                                 singleItem[0],
                                 singleItem[1],
-                                Boolean.parseBoolean(singleItem[2]),
+                                singleItem[2],
                                 singleItem[3],
                                 Double.parseDouble(singleItem[4]));
                 orderList.add(newOrder);
