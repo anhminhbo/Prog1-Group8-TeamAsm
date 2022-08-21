@@ -73,7 +73,7 @@ public class MainMenu extends Menu {
                         AdminMenu adminMenu = new AdminMenu();
                         adminMenu.run();
                     } else {
-                        MemberMenu memberMenu = new MemberMenu();
+                        MemberMenu memberMenu = new MemberMenu(member.getMemberID());
                         memberMenu.run();
                     }
                 }
