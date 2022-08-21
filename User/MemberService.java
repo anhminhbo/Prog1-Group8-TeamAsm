@@ -3,6 +3,7 @@ package User;
 import constant.Membership;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
+import utils.Convert;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -18,24 +19,14 @@ public class MemberService {
     private String fullName;
     private String phoneNumber;
     private String memberShip;
+    private double accumulatedMoney;
 
     public MemberService(RepoService repo) {
         if (MemberService.repo == null) MemberService.repo = repo;
     }
 
     public MemberService(
-            int memberID, String userName, String password, String fullName, String phoneNumber) {
-        // validation check
-        //        if (!memberShip.equalsIgnoreCase("Gold")
-        //                && !memberShip.equalsIgnoreCase("Silver")
-
-        //                && !memberShip.equalsIgnoreCase("Platinum")
-        //                && !memberShip.equalsIgnoreCase("None")) {
-        //            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
-        //        }
-        //        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
-        //            throw new WrongInputRole("Two roles expected Member or Admin");
-        //        }
+            int memberID, String userName, String password, String fullName, String phoneNumber, double accumulatedMoney) {
 
         this.memberID = memberID;
         this.userName = userName.trim();
@@ -43,6 +34,7 @@ public class MemberService {
         this.fullName = fullName.trim();
         this.phoneNumber = phoneNumber;
         this.memberShip = Membership.None;
+        this.accumulatedMoney = 0;
     }
 
     public MemberService(
@@ -51,18 +43,8 @@ public class MemberService {
             String password,
             String fullName,
             String phoneNumber,
-            String memberShip) {
-        // validation check
-        //        if (!memberShip.equalsIgnoreCase("Gold")
-        //                && !memberShip.equalsIgnoreCase("Silver")
-
-        //                && !memberShip.equalsIgnoreCase("Platinum")
-        //                && !memberShip.equalsIgnoreCase("None")) {
-        //            throw new WrongInputRole("The membership must be Silver|Gold|Platinum|None");
-        //        }
-        //        if (!role.equalsIgnoreCase(Role.MEMBER) && !role.equalsIgnoreCase(Role.ADMIN)) {
-        //            throw new WrongInputRole("Two roles expected Member or Admin");
-        //        }
+            String memberShip,
+            double accumulatedMoney) {
 
         this.memberID = memberID;
         this.userName = userName.trim();
@@ -70,6 +52,7 @@ public class MemberService {
         this.fullName = fullName.trim();
         this.phoneNumber = phoneNumber;
         this.memberShip = memberShip;
+        this.accumulatedMoney = accumulatedMoney;
     }
 
     public static String[] getLabelFields() {
@@ -128,6 +111,26 @@ public class MemberService {
         this.memberShip = memberShip;
     }
 
+    public double getAccumulatedMoney() {
+        return accumulatedMoney;
+    }
+
+    public void updateAccumulatedMoney(double totalPriceOfOrder, boolean isAddition) {
+        this.accumulatedMoney += (isAddition ? totalPriceOfOrder : -totalPriceOfOrder);
+    }
+
+    public void updateMemberShip() {
+        if (accumulatedMoney > 25000000){
+            setMemberShip("Platinum");
+        } else if (accumulatedMoney > 10000000) {
+            setMemberShip("Gold");
+        } else if (accumulatedMoney > 5000000) {
+            setMemberShip("Silver");
+        } else {
+            setMemberShip("None");
+        }
+    }
+
     public String toDataLine() {
         return this.memberID
                 + ","
@@ -139,7 +142,10 @@ public class MemberService {
                 + ","
                 + this.phoneNumber
                 + ","
-                + this.memberShip;
+                + this.memberShip
+                + ","
+                + Convert.toDecimal(this.accumulatedMoney)
+                + "\n";
     }
 
     public String[] getMember() {
@@ -149,7 +155,8 @@ public class MemberService {
             this.password,
             this.fullName,
             this.phoneNumber,
-            this.memberShip
+            this.memberShip,
+            Double.toString(this.accumulatedMoney)
         };
     }
 

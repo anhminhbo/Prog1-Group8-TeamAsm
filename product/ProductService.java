@@ -3,7 +3,9 @@ package product;
 import error.InvalidExceptionOption;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
+import utils.Convert;
 
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.InputMismatchException;
@@ -19,7 +21,7 @@ public class ProductService {
     private String productName;
     private String productCategory;
     private String description;
-    private float price;
+    private double price;
 
     public  ProductService(){
         this.productID = "UNKNOWN";
@@ -43,7 +45,7 @@ public class ProductService {
             String productName,
             String productCategory,
             String description,
-            float price) {
+            double price) {
         try {
             this.productID = productID;
             this.productName = productName;
@@ -59,11 +61,15 @@ public class ProductService {
         return labelFields;
     }
 
-    public float getPrice() {
+    public String getProductName() {
+        return productName;
+    }
+
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -81,7 +87,7 @@ public class ProductService {
             this.productName,
             this.productCategory,
             this.description,
-            Float.toString(this.price)
+            Double.toString(this.price)
         };
     }
 
@@ -99,6 +105,16 @@ public class ProductService {
                         + this.price);
     }
 
+    public String[] toProductRow(){
+        return new String[]{
+                String.valueOf(this.productID),
+                this.productName,
+                this.productCategory,
+                this.description,
+                Convert.toDecimal(this.price)
+        };
+    }
+
     public String toDataLine() {
         return this.productID
                 + ","
@@ -108,7 +124,7 @@ public class ProductService {
                 + ","
                 + this.description
                 + ","
-                + this.price
+                + Convert.toDecimal(this.price)
                 + "\n";
     }
 
@@ -195,7 +211,7 @@ public class ProductService {
         String productName;
         String productCategory;
         String description;
-        float price;
+        double price;
         // Input
         try {
             System.out.println("Enter product id: ");
@@ -208,7 +224,7 @@ public class ProductService {
             System.out.println("Enter product description: ");
             description = scan.nextLine();
             System.out.println("Enter product price: ");
-            price = scan.nextFloat();
+            price = scan.nextDouble();
         } catch (InputMismatchException e) {
             System.out.println("Your input is invalid.\nReturning back...");
             return;
@@ -297,10 +313,10 @@ public class ProductService {
                 } while (!res.equals("y") && !res.equals("n"));
 
                 if (res.equals("y")) {
-                    float newPrice;
+                    double newPrice;
                     try {
                         System.out.print("Enter your desired price for this product: ");
-                        newPrice = scan.nextFloat();
+                        newPrice = scan.nextDouble();
                     } catch (InputMismatchException e) {
                         System.out.println("Your input is invalid.\nReturning back...");
                         return;

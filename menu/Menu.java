@@ -1,5 +1,6 @@
 package menu;
 
+import User.MemberService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
 import utils.Option;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 public class Menu {
     private final RepoService repo = new RepoService();
     private final List<Option> options = new ArrayList<>();
+    protected MemberService CurrentUser;
 
     public RepoService getRepo() {
         return repo;
@@ -63,4 +65,3 @@ public class Menu {
         System.out.println("---------------------------------------------------------------------------------------------");
     }
 }
-
