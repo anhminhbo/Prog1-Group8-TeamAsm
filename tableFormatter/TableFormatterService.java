@@ -16,6 +16,10 @@ public class TableFormatterService {
         rows.add(row);
     }
 
+    public ArrayList<String[]> getRows() {
+        return rows;
+    }
+
     public void display() {
         ArrayList<Integer> listOfColumnsLength = maximumLengthOfColumn();
         printTableRow(listOfColumnsLength);

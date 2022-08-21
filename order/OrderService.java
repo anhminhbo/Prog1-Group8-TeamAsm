@@ -6,40 +6,39 @@ import repo.RepoService;
 import tableFormatter.TableFormatterService;
 import utils.Convert;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("StringConcatenationInLoop")
 public class OrderService {
     private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status", "Product - Quantity", "Total Price"};
     private static RepoService repo = new RepoService();
-    private int orderID;
-    private int cusID;
+    private String orderID;
+    private final String cusID;
     private boolean paidStatus;
     private String productList = "";
     private double totalPrice;
 
-    public OrderService(int memberID, RepoService repo) {
+    public OrderService(String memberID, RepoService repo) {
         this.cusID = memberID;
         if (OrderService.repo == null){
             OrderService.repo = repo;
         }
     }
 
-    public int getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
-    public int getCusID() {
+    public String getCusID() {
         return cusID;
     }
 
     public boolean getPaidStatus() {
         return paidStatus;
-    }
-
-    public String getProductList() {
-        return productList;
     }
 
     public void setPaidStatus(boolean paidStatus) {
@@ -57,7 +56,7 @@ public class OrderService {
         return res;
     }
 
-    public OrderService(int orderID, int cusID, boolean paidStatus, String productList, double totalPrice) {
+    public OrderService(String orderID, String cusID, boolean paidStatus, String productList, double totalPrice) {
         String[] item = productList.split(" ");
         for (int i = 0; i < item.length - 1; i++) {
             if (i % 2 == 0) {
@@ -88,7 +87,7 @@ public class OrderService {
                 + Convert.toDecimal(this.totalPrice)
                 + "\n";
     }
-
+//working
     public String[] getOrderRow(){
         ArrayList<ProductService> ProductList = repo.readProductList();
         String[] products = this.productList.split(";");
@@ -96,7 +95,7 @@ public class OrderService {
         for (String product: products) {
             String[] temp = product.split("x");
             for (ProductService Product: ProductList){
-                if (Integer.parseInt(temp[0]) == Product.getProductID()){
+                if (temp[0].equals(Product.getProductID())){
                     listOfProduct += Product.getProductName() + " - " + temp[1] + "; ";
                     break;
                 }
@@ -114,7 +113,7 @@ public class OrderService {
     public void createOrder() {
         try {
             Scanner scanner = new Scanner(System.in);
-            ArrayList <Integer> productID = new ArrayList<>();
+            ArrayList<String> productID = new ArrayList<>();
             ArrayList <Integer> productQuantity = new ArrayList<>();
             ArrayList <ProductService> ProductList = repo.readProductList();
             ArrayList <MemberService> MemberList = repo.readUserList();
@@ -128,14 +127,14 @@ public class OrderService {
             double totalPrice = 0;
             while (true) {
                 System.out.print("Enter product ID: ");
-                int pID = scanner.nextInt();
+                String pID = String.valueOf(scanner.nextInt());
                 // check if the product exist and still available
                 System.out.print("Enter the desired quantity: ");
                 int pQuantity = scanner.nextInt();
                 productID.add(pID);
                 productQuantity.add(pQuantity);
                 for (ProductService product: ProductList){
-                    if (product.getProductID() == pID){
+                    if (product.getProductID().equals(pID)){
                         totalPrice += product.getPrice() * pQuantity;
                         break;
                     }
@@ -153,13 +152,13 @@ public class OrderService {
             }
             StringBuilder newString = new StringBuilder();
             for (int i = 0; i < productID.size(); i++) {
-                newString.append(productID.get(i).toString()).append(" ");
+                newString.append(productID.get(i)).append(" ");
                 newString.append(productQuantity.get(i).toString()).append(" ");
             }
 
             // Get Discount
             for (MemberService Member: MemberList){
-                if (cusID == Member.getMemberID()){
+                if (cusID.equals(Member.getMemberID())){
                     System.out.println(Member.getMemberShip());
                     switch (Member.getMemberShip()) {
                         case "Platinum" -> totalPrice -= totalPrice * 0.15;
@@ -172,14 +171,14 @@ public class OrderService {
             }
 
             ArrayList<OrderService> newData = new ArrayList<>();
-            newData.add(new OrderService(repo.readOrderList().size() + 1, this.cusID, false, newString.toString(), totalPrice));
+            newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, false, newString.toString(), totalPrice));
             repo.writeIntoOrderFile(newData, true);
             System.out.println(newString.substring(0, newString.length() - 1));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+//working
     public void getOrderByOrderID() {
         System.out.print("Enter order ID: ");
         Scanner scanner = new Scanner(System.in);
@@ -188,7 +187,7 @@ public class OrderService {
                 new TableFormatterService(OrderService.getLabelFields());
         ArrayList<OrderService> OrderList = repo.readOrderList();
         for (OrderService order: OrderList){
-            if (order.getOrderID() != Integer.parseInt(orderID)) continue;
+            if (!order.getOrderID().equals(orderID)) continue;
             tableFormatter.addRows(order.getOrderRow());
         }
         tableFormatter.display();
@@ -207,10 +206,17 @@ public class OrderService {
                 new TableFormatterService(OrderService.getLabelFields());
         ArrayList<OrderService> OrderList = repo.readOrderList();
         for (OrderService order: OrderList){
-            if (order.getCusID() != Integer.parseInt(cusID)) continue;
+            if (!order.getCusID().equals(cusID)) continue;
             tableFormatter.addRows(order.getOrderRow());
         }
-        tableFormatter.display();
+        if(tableFormatter.getRows().size() == 0){
+            System.out.println("The customer doesn't exist or they dont have any orders");
+            System.out.println("Returning back...");
+            return;
+        }
+        else{
+            tableFormatter.display();
+        }
         try {
             TimeUnit.SECONDS.sleep(4);
         } catch (Exception err) {
@@ -219,19 +225,18 @@ public class OrderService {
     }
 
     public void changePaidStatus() {
-
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter order ID: ");
-        int orderID = scanner.nextInt();
+        String orderID = String.valueOf(scanner.nextInt()).trim();
         ArrayList<OrderService> OrderList = repo.readOrderList();
         ArrayList<MemberService> MemberList = repo.readUserList();
         TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
         boolean paidStatus = false;
-        int memberID = 0;
+        String memberID = "";
         double totalPrice = 0;
 
         for (OrderService Order: OrderList){
-            if (orderID == Order.getOrderID()){
+            if (orderID.equals(Order.getOrderID())){
                 memberID = Order.getCusID();
                 totalPrice = Order.getTotalPrice();
                 tableFormatter.addRows(Order.getOrderRow());
@@ -250,10 +255,15 @@ public class OrderService {
                 break;
             }
         }
+        if(tableFormatter.getRows().size() == 0){
+            System.out.println("The order doesn't exist. Try again !");
+            System.out.println("Returning back");
+            return;
+        }
         repo.writeIntoOrderFile(OrderList, false);
 
         for (MemberService Member: MemberList){
-            if (Member.getMemberID() == memberID){
+            if (Member.getMemberID().equals(memberID)){
                 Member.updateAccumulatedMoney(totalPrice, paidStatus);
                 Member.updateMemberShip();
                 break;

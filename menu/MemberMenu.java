@@ -10,7 +10,7 @@ public class MemberMenu extends Menu {
         return memberID;
     }
 
-    public MemberMenu(int memberID) {
+    public MemberMenu(String memberID) {
         OrderService orderService = new OrderService(memberID, super.getRepo());
         this.addOption(new Option("1", "Create order", orderService::createOrder));
 

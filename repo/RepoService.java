@@ -21,8 +21,8 @@ public class RepoService {
                 String[] singleItem = orderItem.split(",");
                 OrderService newOrder =
                         new OrderService(
-                                Integer.parseInt(singleItem[0]),
-                                Integer.parseInt(singleItem[1]),
+                                singleItem[0],
+                                singleItem[1],
                                 Boolean.parseBoolean(singleItem[2]),
                                 singleItem[3],
                                 Double.parseDouble(singleItem[4]));
@@ -75,7 +75,7 @@ public class RepoService {
                 String[] singleItem = userItem.split(",");
                 MemberService newUser =
                         new MemberService(
-                                Integer.parseInt(singleItem[0]),
+                                singleItem[0],
                                 singleItem[1],
                                 singleItem[2],
                                 singleItem[3],

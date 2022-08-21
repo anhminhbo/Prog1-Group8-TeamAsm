@@ -13,7 +13,7 @@ public class MemberService {
         "Member ID", "User Name", "Password", "Full Name", "Phone Number", "Membership"
     };
     private static RepoService repo;
-    private int memberID;
+    private String memberID;
     private String userName;
     private String password;
     private String fullName;
@@ -26,9 +26,9 @@ public class MemberService {
     }
 
     public MemberService(
-            int memberID, String userName, String password, String fullName, String phoneNumber, double accumulatedMoney) {
+            String memberID, String userName, String password, String fullName, String phoneNumber, double accumulatedMoney) {
 
-        this.memberID = memberID;
+        this.memberID = memberID.trim();
         this.userName = userName.trim();
         this.password = password.trim();
         this.fullName = fullName.trim();
@@ -38,7 +38,7 @@ public class MemberService {
     }
 
     public MemberService(
-            int memberID,
+            String memberID,
             String userName,
             String password,
             String fullName,
@@ -63,45 +63,19 @@ public class MemberService {
         return repo.readUserList();
     }
 
-    public int getMemberID() {
+    public String getMemberID() {
         return memberID;
-    }
-
-    public void setMemberID(int memberID) {
-        this.memberID = memberID;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getMemberShip() {
         return memberShip;
@@ -150,7 +124,7 @@ public class MemberService {
 
     public String[] getMember() {
         return new String[] {
-            Integer.toString(this.memberID),
+            this.memberID,
             this.userName,
             this.password,
             this.fullName,

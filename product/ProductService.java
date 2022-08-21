@@ -163,6 +163,7 @@ public class ProductService {
             TableFormatterService productTable =
                     new TableFormatterService(ProductService.getLabelFields());
             for (ProductService productService : sortedProducts) {
+                if (productService.getProductID().equals("UNKNOWN")) continue;
                 productTable.addRows(productService.getProduct());
             }
             productTable.display();
@@ -183,6 +184,7 @@ public class ProductService {
             choice = snc.nextLine();
             for (ProductService productService : ProductList) {
                 if (productService.getProductCategory().equalsIgnoreCase(choice)) {
+                    if (productService.getProductID().equals("UNKNOWN")) continue;
                     productListBySearch.add(productService);
                 }
             }
