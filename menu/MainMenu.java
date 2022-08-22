@@ -39,7 +39,7 @@ public class MainMenu extends Menu {
             String fullName = snc.nextLine();
             System.out.println("Enter your Phone Number:");
             String phoneNumber = snc.nextLine();
-            MemberService newUser = new MemberService(memberService.getMemberList().size() + 1,
+            MemberService newUser = new MemberService(String.valueOf(memberService.getMemberList().size() + 1),
                     userName, password, fullName,
                     phoneNumber, 0);
             BufferedWriter userWriter = new BufferedWriter(new FileWriter("repo/User.csv",

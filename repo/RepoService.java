@@ -21,8 +21,8 @@ public class RepoService {
                 String[] singleItem = orderItem.split(",");
                 OrderService newOrder =
                         new OrderService(
-                                Integer.parseInt(singleItem[0]),
-                                Integer.parseInt(singleItem[1]),
+                                singleItem[0],
+                                singleItem[1],
                                 singleItem[2],
                                 singleItem[3],
                                 Double.parseDouble(singleItem[4]));
@@ -43,10 +43,14 @@ public class RepoService {
                 if ((productItem = productReader.readLine()) == null) {
                     continue;
                 }
+                if(productItem.equals("")){
+                    productList.add(new ProductService());
+                    continue;
+                }
                 String[] singleItem = productItem.split(",");
                 ProductService newProduct =
                         new ProductService(
-                                Integer.parseInt(singleItem[0]),
+                                singleItem[0],
                                 singleItem[1],
                                 singleItem[2],
                                 singleItem[3],
@@ -71,7 +75,7 @@ public class RepoService {
                 String[] singleItem = userItem.split(",");
                 MemberService newUser =
                         new MemberService(
-                                Integer.parseInt(singleItem[0]),
+                                singleItem[0],
                                 singleItem[1],
                                 singleItem[2],
                                 singleItem[3],
@@ -91,6 +95,10 @@ public class RepoService {
             BufferedWriter DataWriter =
                     new BufferedWriter(new FileWriter("repo/Products.csv", append));
             for (ProductService product : ProductList) {
+                if(product.getProductID().equals("UNKNOWN")){
+                    DataWriter.write("\n");
+                    continue;
+                }
                 DataWriter.write(product.toDataLine());
             }
             DataWriter.close();
