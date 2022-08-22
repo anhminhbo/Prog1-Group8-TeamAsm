@@ -1,4 +1,4 @@
-package User;
+package user;
 
 import constant.Membership;
 import repo.RepoService;
@@ -26,7 +26,12 @@ public class MemberService {
     }
 
     public MemberService(
-            String memberID, String userName, String password, String fullName, String phoneNumber, double accumulatedMoney) {
+            String memberID,
+            String userName,
+            String password,
+            String fullName,
+            String phoneNumber,
+            double accumulatedMoney) {
 
         this.memberID = memberID.trim();
         this.userName = userName.trim();
@@ -71,11 +76,9 @@ public class MemberService {
         return userName;
     }
 
-
     public String getPassword() {
         return password;
     }
-
 
     public String getMemberShip() {
         return memberShip;

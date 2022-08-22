@@ -1,8 +1,8 @@
 package repo;
 
-import User.MemberService;
 import order.OrderService;
 import product.ProductService;
+import user.MemberService;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class RepoService {
                 if ((productItem = productReader.readLine()) == null) {
                     continue;
                 }
-                if(productItem.equals("")){
+                if (productItem.equals("")) {
                     productList.add(new ProductService());
                     continue;
                 }
@@ -95,7 +95,7 @@ public class RepoService {
             BufferedWriter DataWriter =
                     new BufferedWriter(new FileWriter("repo/Products.csv", append));
             for (ProductService product : ProductList) {
-                if(product.getProductID().equals("UNKNOWN")){
+                if (product.getProductID().equals("UNKNOWN")) {
                     DataWriter.write("\n");
                     continue;
                 }

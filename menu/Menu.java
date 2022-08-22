@@ -1,6 +1,5 @@
 package menu;
 
-import User.MemberService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
 import utils.Option;
@@ -12,8 +11,12 @@ import java.util.Scanner;
 public class Menu {
     private final RepoService repo = new RepoService();
     private final List<Option> options = new ArrayList<>();
-    protected MemberService CurrentUser;
-
+    private final Scanner scanner = new Scanner(System.in);
+    
+    public Scanner getScanner() {
+        return scanner;
+    }
+    
     public RepoService getRepo() {
         return repo;
     }
@@ -33,12 +36,11 @@ public class Menu {
 
     public void run() {
         welcome();
-        Scanner sc = new Scanner(System.in);
         //noinspection InfiniteLoopStatement
         while (true) {
             displayOptions();
             System.out.println("Enter an option: ");
-            String input = sc.next();
+            String input = scanner.nextLine();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
                     option.execute();

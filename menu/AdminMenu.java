@@ -1,16 +1,16 @@
 package menu;
 
-import User.MemberService;
 import order.OrderService;
 import product.ProductService;
+import user.MemberService;
 import utils.Option;
 
 public class AdminMenu extends Menu {
 
     public AdminMenu() {
-        ProductService productService = new ProductService(super.getRepo());
+        ProductService productService = new ProductService(super.getRepo(), super.getScanner());
         MemberService memberService = new MemberService(super.getRepo());
-        OrderService orderService = new OrderService(super.getRepo());
+        OrderService orderService = new OrderService(super.getRepo(), super.getScanner());
 
         this.addOption(
                 new Option("1", "Add new product to the store", productService::addNewProduct));

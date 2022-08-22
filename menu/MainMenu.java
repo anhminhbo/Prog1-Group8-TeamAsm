@@ -1,8 +1,8 @@
 package menu;
 
-import User.MemberService;
 import error.InvalidUserFormat;
 import product.ProductService;
+import user.MemberService;
 import utils.Option;
 
 import java.io.BufferedWriter;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainMenu extends Menu {
     private final MemberService memberService = new MemberService(super.getRepo());
-    private final ProductService productService = new ProductService(super.getRepo());
+    private final ProductService productService = new ProductService(super.getRepo(), super.getScanner());
     public MainMenu() {
 //        Add options to MainMenu
         this.addOption(new Option("1", "Register to become a member\s", this::register));
@@ -30,7 +30,7 @@ public class MainMenu extends Menu {
     //main method for MainService
     public void register() {
         try {
-            Scanner snc = new Scanner(System.in);
+            Scanner snc = super.getScanner();
             System.out.println("Enter your Username:");
             String userName = snc.nextLine();
             System.out.println("Enter your Password:");
@@ -56,12 +56,12 @@ public class MainMenu extends Menu {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+  
 
     }
 
     public void login() {
-        Scanner snc = new Scanner(System.in);
+        Scanner snc = super.getScanner();
         try {
             System.out.println("Enter your Username to login:");
             String userName = snc.nextLine().trim();
