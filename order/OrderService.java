@@ -2,12 +2,13 @@ package order;
 
 import constant.Membership;
 import constant.PaidStatus;
+import error.InvalidUserFormat;
+import error.isValidDateFormat;
 import product.ProductService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
 import user.MemberService;
 import utils.Convert;
-import error.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -152,7 +153,7 @@ public class OrderService {
             String input;
             double totalPrice = 0;
             double productPrice = 0;
-            String role = "";
+            String membershipStatus = "";
             while (true) {
                 System.out.print("Enter product ID: ");
                 String pID = String.valueOf(scanner.nextInt());
@@ -187,9 +188,9 @@ public class OrderService {
             // Get Discount
             for (MemberService Member : MemberList) {
                 if (cusID.equals(Member.getMemberID())) {
-                    role = Member.getMemberShip();
+                    membershipStatus = Member.getMemberShip();
                     productPrice = totalPrice;
-                    switch (role) {
+                    switch (membershipStatus) {
                         case Membership.Platinum -> totalPrice -= totalPrice * 0.15;
                         case Membership.Gold -> totalPrice -= totalPrice * 0.1;
                         case Membership.Silver -> totalPrice -= totalPrice * 0.05;
@@ -212,7 +213,7 @@ public class OrderService {
             }
             orderConfirmedDisplay.display();
             System.out.println("The total products price is: " + productPrice);
-            switch (role) {
+            switch (membershipStatus) {
                 case Membership.Platinum -> System.out.println("You got 15% discount as a " + Membership.Platinum + " member");
                 case Membership.Gold -> System.out.println("You got 10% discount as a " + Membership.Gold + " member");
                 case Membership.Silver -> System.out.println("You got 5% discount as a " + Membership.Silver + " member");
