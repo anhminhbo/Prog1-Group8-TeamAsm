@@ -25,8 +25,10 @@ public class AdminMenu extends Menu {
         this.addOption(
                 new Option("7", "Change the status of the Order", orderService::changePaidStatus));
         this.addOption(
+                new Option("8", "Calculate the daily revenue", orderService::calTotalRevenue));
+        this.addOption(
                 new Option(
-                        "8",
+                        "9",
                         "Log out",
                         () -> {
                             MainMenu mainMenu = new MainMenu();
@@ -35,7 +37,7 @@ public class AdminMenu extends Menu {
                         }));
         this.addOption(
                 new Option(
-                        "9",
+                        "10",
                         "Exit the program",
                         () -> {
                             System.out.println("Good bye see you again.");
