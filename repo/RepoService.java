@@ -25,7 +25,8 @@ public class RepoService {
                                 singleItem[1],
                                 singleItem[2],
                                 singleItem[3],
-                                Double.parseDouble(singleItem[4]));
+                                singleItem[4],
+                                Double.parseDouble(singleItem[5]));
                 orderList.add(newOrder);
             }
         } catch (Exception err) {
