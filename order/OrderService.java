@@ -1,16 +1,14 @@
 package order;
 
-import User.MemberService;
 import constant.Membership;
 import constant.PaidStatus;
 import product.ProductService;
 import repo.RepoService;
 import tableFormatter.TableFormatterService;
+import user.MemberService;
 import utils.Convert;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -18,17 +16,27 @@ import java.util.concurrent.TimeUnit;
 public class OrderService {
     private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status", "Product - Quantity", "Total Price"};
     private static RepoService repo = new RepoService();
+    private static Scanner scanner;
+    private String cusID;
     private String orderID;
-    private final String cusID;
-    private boolean paidStatus;
+    private String paidStatus;
     private String productList = "";
     private double totalPrice;
-
-    public OrderService(String memberID, RepoService repo) {
+    
+    public OrderService(RepoService repo, Scanner scanner) {
+        if (OrderService.repo == null){
+            OrderService.repo = repo;
+        }
+        if (OrderService.scanner == null) OrderService.scanner = scanner;
+    }
+    
+    public OrderService(String memberID, RepoService repo,Scanner scanner) {
         this.cusID = memberID;
         if (OrderService.repo == null){
             OrderService.repo = repo;
         }
+        if (OrderService.scanner == null) OrderService.scanner = scanner;
+    
     }
 
 
@@ -51,7 +59,7 @@ public class OrderService {
         return labelFields;
     }
 
-    public int getOrderID() {
+    public String getOrderID() {
         return orderID;
     }
 
@@ -119,7 +127,6 @@ public class OrderService {
 
     public void createOrder() {
         try {
-            Scanner scanner = new Scanner(System.in);
             ArrayList<String> productID = new ArrayList<>();
             ArrayList <Integer> productQuantity = new ArrayList<>();
             ArrayList <ProductService> ProductList = repo.readProductList();
@@ -147,7 +154,7 @@ public class OrderService {
                     }
                 }
                 System.out.println("Do you want to buy anything else (Y/N): ");
-                Scanner myObj = new Scanner(System.in);
+                Scanner myObj = scanner;
                 input = myObj.nextLine().trim();
                 while (!input.equalsIgnoreCase("y") && !input.equalsIgnoreCase("n")) {
                     System.out.println("Please type in Y or N: ");
@@ -188,7 +195,6 @@ public class OrderService {
 //working
     public void getOrderByOrderID() {
         System.out.print("Enter order ID: ");
-        Scanner scanner = new Scanner(System.in);
         String orderID = scanner.nextLine().trim();
         TableFormatterService tableFormatter =
                 new TableFormatterService(OrderService.getLabelFields());
@@ -207,7 +213,6 @@ public class OrderService {
 
     public void getOrderByCustomerID() {
         System.out.print("Enter customer ID: ");
-        Scanner scanner = new Scanner(System.in);
         String cusID = scanner.nextLine().trim();
         TableFormatterService tableFormatter =
                 new TableFormatterService(OrderService.getLabelFields());
@@ -217,7 +222,7 @@ public class OrderService {
             tableFormatter.addRows(order.getOrderRow());
         }
         if(tableFormatter.getRows().size() == 0){
-            System.out.println("The customer doesn't exist or they dont have any orders");
+            System.out.println("The customer doesn't exist or they don't have any orders");
             System.out.println("Returning back...");
             return;
         }
@@ -232,7 +237,6 @@ public class OrderService {
     }
 
     public void changePaidStatus() {
-        Scanner scanner = new Scanner(System.in);
         System.out.print("Enter order ID: ");
         String orderID = String.valueOf(scanner.nextInt()).trim();
         ArrayList<OrderService> OrderList = repo.readOrderList();
