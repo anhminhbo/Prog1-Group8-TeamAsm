@@ -13,7 +13,7 @@ public class MemberMenu extends Menu {
         this.addOption(new Option("2", "Search order", orderService::getOrderByOrderID));
         this.addOption(
                 new Option(
-                        "5",
+                        "4",
                         "Log out",
                         () -> {
                             MainMenu mainMenu = new MainMenu();
@@ -22,7 +22,7 @@ public class MemberMenu extends Menu {
                         }));
         this.addOption(
                 new Option(
-                        "6",
+                        "5",
                         "Exit the program",
                         () -> {
                             System.out.println("Good bye see you again.");

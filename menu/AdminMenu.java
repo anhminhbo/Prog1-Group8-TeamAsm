@@ -25,7 +25,10 @@ public class AdminMenu extends Menu {
         this.addOption(
                 new Option("7", "Change the status of the Order", orderService::changePaidStatus));
         this.addOption(
-                new Option("8", "Calculate the daily revenue", orderService::calTotalRevenue));
+                new Option(
+                        "8",
+                        "Calculate the daily revenue",
+                        orderService::showOrderListAndCalculateTotalRevenue));
         this.addOption(
                 new Option(
                         "9",

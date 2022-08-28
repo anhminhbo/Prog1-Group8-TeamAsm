@@ -217,7 +217,7 @@ public class OrderService {
                 case Membership.Platinum -> System.out.println("You got 15% discount as a " + Membership.Platinum + " member");
                 case Membership.Gold -> System.out.println("You got 10% discount as a " + Membership.Gold + " member");
                 case Membership.Silver -> System.out.println("You got 5% discount as a " + Membership.Silver + " member");
-                case Membership.None -> System.out.println("You are not a vip member, so that there is no discount");
+                case Membership.None -> System.out.println("You are not a VIP member, so that there is no discount");
             }
             System.out.println("The payment : " + totalPrice);
 
@@ -317,7 +317,7 @@ public class OrderService {
         repo.writeIntoUserFile(MemberList, false);
     }
 
-    public void calTotalRevenue() {
+    public void showOrderListAndCalculateTotalRevenue() {
         ArrayList<OrderService> OrderList = repo.readOrderList();
 
         try {
