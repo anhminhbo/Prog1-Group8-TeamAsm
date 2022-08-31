@@ -181,7 +181,7 @@ public class ProductService {
         ArrayList<ProductService> ProductList = repo.readProductList();
         try {
             System.out.println(
-                    "What do you want to search by products category ? Type the category name");
+                    "What do you want to search by products category? Enter the category name");
             choice = snc.nextLine();
             for (ProductService productService : ProductList) {
                 if (productService.getProductCategory().equalsIgnoreCase(choice)) {
@@ -197,11 +197,11 @@ public class ProductService {
             if (productListBySearch.size() > 0) {
                 productTable.display();
             } else {
-                System.out.println("Sorry! Cant find any results for " + choice + " category");
+                System.out.println("Sorry! Cant find any results for '" + choice + "' category");
             }
             TimeUnit.SECONDS.sleep(3);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Invalid input");
         }
     }
 

@@ -51,7 +51,7 @@ public class MainMenu extends Menu {
             userWriter.newLine();
             userWriter.write(newUser.toDataLine());
             userWriter.close();
-            System.out.println("Registered successfully !Login to enjoy the system");
+            System.out.println("Registered successfully! Login to enjoy the system");
             TimeUnit.SECONDS.sleep(3);
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,9 +63,9 @@ public class MainMenu extends Menu {
     public void login() {
         Scanner snc = super.getScanner();
         try {
-            System.out.println("Enter your Username to login:");
+            System.out.println("Enter your Username:");
             String userName = snc.nextLine().trim();
-            System.out.println("Enter your Password to login:");
+            System.out.println("Enter your Password:");
             String password = snc.nextLine().trim();
             for (MemberService member : memberService.getMemberList()) {
                 if (member.getUserName().equals(userName) && member.getPassword().equals(password)) {

@@ -14,6 +14,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -157,6 +158,17 @@ public class OrderService {
             while (true) {
                 System.out.print("Enter product ID: ");
                 String pID = String.valueOf(scanner.nextInt());
+                boolean isIDExist = false;
+                for (ProductService product: ProductList){
+                    if (Objects.equals(product.getProductID(), pID)){
+                        isIDExist = true;
+                        break;
+                    }
+                }
+                if (!isIDExist) {
+                    System.out.println("Product is not exist. Please enter again.");
+                    return;
+                }
                 // check if the product exist and still available
                 System.out.print("Enter the desired quantity: ");
                 int pQuantity = scanner.nextInt();
@@ -177,50 +189,51 @@ public class OrderService {
                 }
                 if (input.equalsIgnoreCase("N")) {
                     break;
-                } else assert true;
-            }
-            StringBuilder newString = new StringBuilder();
-            for (int i = 0; i < productID.size(); i++) {
-                newString.append(productID.get(i)).append(" ");
-                newString.append(productQuantity.get(i).toString()).append(" ");
-            }
-
-            // Get Discount
-            for (MemberService Member : MemberList) {
-                if (cusID.equals(Member.getMemberID())) {
-                    membershipStatus = Member.getMemberShip();
-                    productPrice = totalPrice;
-                    switch (membershipStatus) {
-                        case Membership.Platinum -> totalPrice -= totalPrice * 0.15;
-                        case Membership.Gold -> totalPrice -= totalPrice * 0.1;
-                        case Membership.Silver -> totalPrice -= totalPrice * 0.05;
+                } else {
+    
+                    StringBuilder newString = new StringBuilder();
+                    for (int i = 0; i < productID.size(); i++) {
+                        newString.append(productID.get(i)).append(" ");
+                        newString.append(productQuantity.get(i).toString()).append(" ");
                     }
-                    break;
+    
+                    // Get Discount
+                    for (MemberService Member : MemberList) {
+                        if (cusID.equals(Member.getMemberID())) {
+                            membershipStatus = Member.getMemberShip();
+                            productPrice = totalPrice;
+                            switch (membershipStatus) {
+                                case Membership.Platinum -> totalPrice -= totalPrice * 0.15;
+                                case Membership.Gold -> totalPrice -= totalPrice * 0.1;
+                                case Membership.Silver -> totalPrice -= totalPrice * 0.05;
+                            }
+                            break;
+                        }
+                    }
+    
+                    ArrayList<OrderService> newData = new ArrayList<>();
+                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date = new Date();
+                    String strDate = dateFormat.format(date);
+                    newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, PaidStatus.UnPaid, newString.toString(), strDate, totalPrice));
+                    repo.writeIntoOrderFile(newData, true);
+                    System.out.println("Thank for ordering! Here is the details");
+                    TableFormatterService orderConfirmedDisplay = new TableFormatterService(ProductService.getLabelFields());
+                    for (ProductService product : ProductList) {
+                        if (!product.getProductID().equals(String.valueOf(repo.readOrderList().size() + 1))) continue;
+                        orderConfirmedDisplay.addRows(product.toProductRow());
+                    }
+                    orderConfirmedDisplay.display();
+                    System.out.println("The total products price is: " + productPrice);
+                    switch (membershipStatus) {
+                        case Membership.Platinum -> System.out.println("You got 15% discount as a " + Membership.Platinum + " member");
+                        case Membership.Gold -> System.out.println("You got 10% discount as a " + Membership.Gold + " member");
+                        case Membership.Silver -> System.out.println("You got 5% discount as a " + Membership.Silver + " member");
+                        case Membership.None -> System.out.println("You are not a VIP member, so that there is no discount");
+                    }
+                    System.out.println("The payment : " + totalPrice);
                 }
             }
-
-            ArrayList<OrderService> newData = new ArrayList<>();
-            DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = new Date();
-            String strDate = dateFormat.format(date);
-            newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, PaidStatus.UnPaid, newString.toString(), strDate, totalPrice));
-            repo.writeIntoOrderFile(newData, true);
-            System.out.println("Thank for ordering! Here is the details");
-            TableFormatterService orderConfirmedDisplay = new TableFormatterService(ProductService.getLabelFields());
-            for (ProductService product : ProductList) {
-                if (!product.getProductID().equals(String.valueOf(repo.readOrderList().size() + 1))) continue;
-                orderConfirmedDisplay.addRows(product.toProductRow());
-            }
-            orderConfirmedDisplay.display();
-            System.out.println("The total products price is: " + productPrice);
-            switch (membershipStatus) {
-                case Membership.Platinum -> System.out.println("You got 15% discount as a " + Membership.Platinum + " member");
-                case Membership.Gold -> System.out.println("You got 10% discount as a " + Membership.Gold + " member");
-                case Membership.Silver -> System.out.println("You got 5% discount as a " + Membership.Silver + " member");
-                case Membership.None -> System.out.println("You are not a VIP member, so that there is no discount");
-            }
-            System.out.println("The payment : " + totalPrice);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

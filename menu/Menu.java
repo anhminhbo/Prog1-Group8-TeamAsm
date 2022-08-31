@@ -39,8 +39,9 @@ public class Menu {
         //noinspection InfiniteLoopStatement
         while (true) {
             displayOptions();
-            System.out.println("Enter an option: ");
-            String input = scanner.nextLine();
+            System.out.print("Enter an option: ");
+            String input = String.valueOf(scanner.nextInt());
+            scanner.nextLine();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
                     option.execute();
