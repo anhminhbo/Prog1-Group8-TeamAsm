@@ -4,7 +4,7 @@ public class WrongInputType extends Exception {
     public WrongInputType() {
     }
 
-    public WrongInputType(String message, Throwable err) {
+    public WrongInputType(String message) {
         super(message);
     }
 }

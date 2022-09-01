@@ -366,4 +366,26 @@ public class OrderService {
 
 
     }
+
+    public void getAllOrderOfMember() {
+        TableFormatterService displayAllOrders =
+                new TableFormatterService(OrderService.getLabelFields());
+        ArrayList<OrderService> OrderList = repo.readOrderList();
+        for (OrderService order : OrderList) {
+            if (!order.getCusID().equals(this.cusID)) continue;
+            displayAllOrders.addRows(order.getOrderRow());
+        }
+        if (displayAllOrders.getRows().size() == 0) {
+            System.out.println("You do not have any orders in processing");
+            System.out.println("Returning back...");
+            return;
+        } else {
+            displayAllOrders.display();
+        }
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+    }
 }
