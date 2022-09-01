@@ -18,20 +18,21 @@ public class AdminMenu extends Menu {
                 new Option("2", "Remove product from the store", productService::removeProduct));
         this.addOption(new Option("3", "Update product price", productService::updatePrice));
         this.addOption(new Option("4", "View all products", productService::viewAllProducts));
-        this.addOption(new Option("5", "View all members", memberService::viewAllMembers));
+        this.addOption(new Option("5", "View all orders", orderService::getAllOrders));
+        this.addOption(new Option("6", "View all members", memberService::viewAllMembers));
         this.addOption(
                 new Option(
-                        "6", "Get all orders from customer", orderService::getOrderByCustomerID));
+                        "7", "Get all orders from customer", orderService::getOrderByCustomerID));
         this.addOption(
-                new Option("7", "Change the status of the Order", orderService::changePaidStatus));
+                new Option("8", "Change the status of the Order", orderService::changePaidStatus));
         this.addOption(
                 new Option(
-                        "8",
+                        "9",
                         "Calculate the daily revenue",
                         orderService::showOrderListAndCalculateTotalRevenue));
         this.addOption(
                 new Option(
-                        "9",
+                        "10",
                         "Log out",
                         () -> {
                             MainMenu mainMenu = new MainMenu();
@@ -40,7 +41,7 @@ public class AdminMenu extends Menu {
                         }));
         this.addOption(
                 new Option(
-                        "10",
+                        "11",
                         "Exit the program",
                         () -> {
                             System.out.println("Good bye see you again.");

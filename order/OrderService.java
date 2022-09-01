@@ -282,6 +282,27 @@ public class OrderService {
         }
     }
 
+    public void getAllOrders(){
+        TableFormatterService displayAllCustomerOrders =
+                new TableFormatterService(OrderService.getLabelFields());
+        ArrayList<OrderService> OrderList = repo.readOrderList();
+        for (OrderService order : OrderList) {
+            displayAllCustomerOrders.addRows(order.getOrderRow());
+        }
+        if (displayAllCustomerOrders.getRows().size() == 0) {
+            System.out.println("There are no orders in the history or processing");
+            System.out.println("Returning back...");
+            return;
+        } else {
+            displayAllCustomerOrders.display();
+        }
+        try {
+            TimeUnit.SECONDS.sleep(4);
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+    }
+
     public void changePaidStatus() {
         System.out.print("Enter order ID: ");
         String orderID = String.valueOf(scanner.nextInt()).trim();
