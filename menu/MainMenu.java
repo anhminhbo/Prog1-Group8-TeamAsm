@@ -1,6 +1,7 @@
 package menu;
 
 import error.InvalidUserFormat;
+import error.WrongInputType;
 import product.ProductService;
 import user.MemberService;
 import utils.Option;
@@ -32,13 +33,19 @@ public class MainMenu extends Menu {
         try {
             Scanner snc = super.getScanner();
             System.out.println("Enter your Username:");
-            String userName = snc.nextLine();
+            String userName = snc.nextLine().trim();
             System.out.println("Enter your Password:");
-            String password = snc.nextLine();
+            String password = snc.nextLine().trim();
             System.out.println("Enter your Full Name:");
-            String fullName = snc.nextLine();
+            String fullName = snc.nextLine().trim();
             System.out.println("Enter your Phone Number:");
-            String phoneNumber = snc.nextLine();
+            String phoneNumber = snc.nextLine().trim();
+            try{
+                Integer.parseInt(phoneNumber);
+            }
+            catch (Exception e){
+                throw new WrongInputType("Invalid phone number !Try again");
+            }
             MemberService newUser = new MemberService(String.valueOf(memberService.getMemberList().size() + 1),
                     userName, password, fullName,
                     phoneNumber, 0);
