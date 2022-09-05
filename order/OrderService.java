@@ -305,7 +305,15 @@ public class OrderService {
 
     public void changePaidStatus() {
         System.out.print("Enter order ID: ");
-        String orderID = String.valueOf(scanner.nextInt()).trim();
+        String orderID;
+        try {
+            orderID = String.valueOf(scanner.nextInt()).trim();
+            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.println("Invalid order ID, please try again.");
+            scanner.nextLine();
+            return;
+        }
         ArrayList<OrderService> OrderList = repo.readOrderList();
         ArrayList<MemberService> MemberList = repo.readUserList();
         TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
@@ -324,7 +332,7 @@ public class OrderService {
                 String newStatus = scanner.next().trim().toLowerCase();
                 while (!newStatus.equals("p") && !newStatus.equals("u")) {
                     System.out.println("Wrong paid status.");
-                    System.out.println("Enter again:");
+                    System.out.println("Enter paid status (Paid(P)/ Unpaid(U) again :");
                     newStatus = scanner.nextLine().trim().toLowerCase();
                 }
                 paidStatus = (newStatus.equals("p")) ? PaidStatus.Paid : PaidStatus.UnPaid;
@@ -359,7 +367,7 @@ public class OrderService {
             String input = scanner.nextLine();
             double totalRevenue = 0;
             isValidDateFormat validChecker = new isValidDateFormat();
-            if (!validChecker.isValidFormat(input)) {
+            if (validChecker.isValidFormat(input)) {
                 input = String.valueOf(new SimpleDateFormat("dd/MM/yyyy").parse(input));
                 TableFormatterService tableFormatter =
                         new TableFormatterService(OrderService.getLabelFields());

@@ -217,8 +217,6 @@ public class ProductService {
         double price;
         // Input
         try {
-            System.out.println("Enter product id: ");
-            productID = String.valueOf(scan.nextInt());
             scan.nextLine();
             System.out.println("Enter product name: ");
             productName = scan.nextLine();
@@ -234,7 +232,12 @@ public class ProductService {
         }
 
         ProductService temp =
-                new ProductService(productID, productName, productCategory, description, price);
+                new ProductService(
+                        String.valueOf(repo.readProductList().size() + 1),
+                        productName,
+                        productCategory,
+                        description,
+                        price);
         repo.writeIntoFile("repo/Products.csv", temp.toDataLine(), true);
         System.out.println("A new product has been added.\nReturning back...");
     }
@@ -292,11 +295,13 @@ public class ProductService {
         Scanner scan = scanner;
 
         // Input
-        String productID;
+        String productID = "";
         try {
-            System.out.print("Enter your desired product id: ");
+            System.out.println("Enter your desired product id: ");
             productID = String.valueOf(scan.nextInt());
+            scan.nextLine();
         } catch (InputMismatchException e) {
+            System.out.println(productID);
             System.out.println("Your input is invalid.\nReturning back...");
             return;
         }
@@ -320,8 +325,10 @@ public class ProductService {
                     try {
                         System.out.print("Enter your desired price for this product: ");
                         newPrice = scan.nextDouble();
+                        scan.nextLine();
                     } catch (InputMismatchException e) {
                         System.out.println("Your input is invalid.\nReturning back...");
+                        scan.nextLine();
                         return;
                     }
                     product.setPrice(newPrice);

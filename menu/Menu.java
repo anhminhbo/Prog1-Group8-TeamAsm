@@ -34,13 +34,20 @@ public class Menu {
     }
 
 
-    public void run() {
+    public void run()  {
         welcome();
         //noinspection InfiniteLoopStatement
         while (true) {
             displayOptions();
             System.out.print("Enter an option: ");
-            String input = String.valueOf(scanner.nextInt());
+            String input;
+            try {
+            input = String.valueOf(scanner.nextInt());
+            }
+            catch (Exception e) {
+                scanner.nextLine();
+                continue;
+            }
             scanner.nextLine();
             for (Option option : options) {
                 if (option.getToggleKey().equals(input)) {
