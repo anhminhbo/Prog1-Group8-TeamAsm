@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("StringConcatenationInLoop")
 public class OrderService {
     private static final String[] labelFields = {"Order ID", "Customer ID", "Paid Status", "Product - Quantity", "Date", "Total Price"};
-    private static RepoService repo = new RepoService();
+    private static RepoService repo;
     private static Scanner scanner;
     private String cusID;
     private String orderID;
