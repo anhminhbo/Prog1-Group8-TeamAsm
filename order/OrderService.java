@@ -215,7 +215,7 @@ public class OrderService {
                     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                     Date date = new Date();
                     String strDate = dateFormat.format(date);
-                    newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, PaidStatus.UnPaid, newString.toString(), strDate, totalPrice));
+                    newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, PaidStatus.Unpaid, newString.toString(), strDate, totalPrice));
                     repo.writeIntoOrderFile(newData, true);
                     System.out.println("Thank for ordering! Here is the details");
                     TableFormatterService orderConfirmedDisplay = new TableFormatterService(ProductService.getLabelFields());
@@ -317,7 +317,7 @@ public class OrderService {
         ArrayList<OrderService> OrderList = repo.readOrderList();
         ArrayList<MemberService> MemberList = repo.readUserList();
         TableFormatterService tableFormatter = new TableFormatterService(OrderService.getLabelFields());
-        String paidStatus = PaidStatus.UnPaid;
+        String paidStatus = PaidStatus.Unpaid;
         String memberID = "";
         double totalPrice = 0;
 
@@ -335,7 +335,7 @@ public class OrderService {
                     System.out.println("Enter paid status (Paid(P)/ Unpaid(U) again :");
                     newStatus = scanner.nextLine().trim().toLowerCase();
                 }
-                paidStatus = (newStatus.equals("p")) ? PaidStatus.Paid : PaidStatus.UnPaid;
+                paidStatus = (newStatus.equals("p")) ? PaidStatus.Paid : PaidStatus.Unpaid;
                 if (Order.getPaidStatus().equals(paidStatus)) return;
                 Order.setPaidStatus(paidStatus);
                 break;
@@ -372,7 +372,7 @@ public class OrderService {
                 TableFormatterService tableFormatter =
                         new TableFormatterService(OrderService.getLabelFields());
                 for (OrderService order : OrderList) {
-                    if ((!String.valueOf(new SimpleDateFormat("dd/MM/yyyy").parse(order.getDate())).equals(input)) || (order.getPaidStatus().equals(PaidStatus.UnPaid)))
+                    if ((!String.valueOf(new SimpleDateFormat("dd/MM/yyyy").parse(order.getDate())).equals(input)) || (order.getPaidStatus().equals(PaidStatus.Unpaid)))
                         continue;
                     totalRevenue += order.getTotalPrice();
                     tableFormatter.addRows(order.getOrderRow());
