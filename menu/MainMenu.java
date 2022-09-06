@@ -94,7 +94,7 @@ public class MainMenu extends Menu {
     }
     
     //sub method that helps to optimize the project
-    public boolean checkIfUserExist(MemberService user) {
+    private boolean checkIfUserExist(MemberService user) {
         for (MemberService member : memberService.getMemberList()) {
             if (member.getUserName().equalsIgnoreCase(user.getUserName())) {
                 return true;
