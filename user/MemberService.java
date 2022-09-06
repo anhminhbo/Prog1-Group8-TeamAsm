@@ -125,7 +125,7 @@ public class MemberService {
                 + "\n";
     }
 
-    public String[] getMember() {
+    private String[] getMember() {
         return new String[] {
             this.memberID,
             this.userName,

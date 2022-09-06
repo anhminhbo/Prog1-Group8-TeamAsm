@@ -21,7 +21,7 @@ public class TableFormatterService {
     }
 
     public void display() {
-        ArrayList<Integer> listOfColumnsLength = maximumLengthOfColumn();
+        ArrayList<Integer> listOfColumnsLength = maximumWidthOfEachColumn();
         printTableRow(listOfColumnsLength);
         printDelimiter();
     }
@@ -70,7 +70,7 @@ public class TableFormatterService {
                 "------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
     }
 
-    private ArrayList<Integer> maximumLengthOfColumn() {
+    private ArrayList<Integer> maximumWidthOfEachColumn() {
         int maxLen = 0;
         for (int i = 0; i < labels.length; i++) {
             maxLen = Math.max(labels[i].length(), maxLen);

@@ -82,7 +82,7 @@ public class ProductService {
         return productID;
     }
 
-    public String[] getProduct() {
+    private String[] getProduct() {
         return new String[] {
             (this.productID),
             this.productName,
@@ -92,7 +92,7 @@ public class ProductService {
         };
     }
 
-    public void showProductDetail() {
+    private void showProductDetail() {
         System.out.println(
                 "Product ID: "
                         + this.productID

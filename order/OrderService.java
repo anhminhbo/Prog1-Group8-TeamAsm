@@ -91,7 +91,7 @@ public class OrderService {
         return totalPrice;
     }
 
-    public String convertProductList() {
+    private String convertProductList() {
         String res = productList;
         res = res.replace('x', ' ');
         res = res.replace(';', ' ');
@@ -114,7 +114,7 @@ public class OrderService {
     }
 
     //working
-    public String[] getOrderRow() {
+    private String[] getOrderRow() {
         ArrayList<ProductService> ProductList = repo.readProductList();
         String[] products = this.productList.split(";");
         String listOfProduct = "";
