@@ -4,7 +4,6 @@ import order.OrderService;
 import utils.Option;
 
 public class MemberMenu extends Menu {
-    private int memberID;
 
     public MemberMenu(String memberID) {
         OrderService orderService = new OrderService(memberID, super.getRepo(), super.getScanner());
@@ -28,9 +27,5 @@ public class MemberMenu extends Menu {
                             System.out.println("Good bye see you again.");
                             System.exit(0);
                         }));
-    }
-
-    public int getMemberID() {
-        return memberID;
     }
 }
