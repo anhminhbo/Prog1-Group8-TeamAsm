@@ -338,6 +338,7 @@ public class OrderService {
                 paidStatus = (newStatus.equals("p")) ? PaidStatus.Paid : PaidStatus.Unpaid;
                 if (Order.getPaidStatus().equals(paidStatus)) return;
                 Order.setPaidStatus(paidStatus);
+                System.out.println("The status of your chosen Order has been changed.");
                 break;
             }
         }

@@ -217,7 +217,6 @@ public class ProductService {
         double price;
         // Input
         try {
-            scan.nextLine();
             System.out.println("Enter product name: ");
             productName = scan.nextLine();
             System.out.println("Enter product category: ");
@@ -226,6 +225,7 @@ public class ProductService {
             description = scan.nextLine();
             System.out.println("Enter product price: ");
             price = scan.nextDouble();
+            scan.nextLine();
         } catch (InputMismatchException e) {
             System.out.println("Your input is invalid.\nReturning back...");
             return;
