@@ -140,6 +140,7 @@ public class OrderService {
     @SuppressWarnings("SwitchStatementWithoutDefaultBranch")
     public void createOrder() {
         try {
+            boolean isBuyMore = false;
             ArrayList<String> productID = new ArrayList<>();
             ArrayList<Integer> productQuantity = new ArrayList<>();
             ArrayList<ProductService> ProductList = repo.readProductList();
@@ -188,9 +189,6 @@ public class OrderService {
                     input = myObj.nextLine().trim();
                 }
                 if (input.equalsIgnoreCase("N")) {
-                    break;
-                } else {
-    
                     StringBuilder newString = new StringBuilder();
                     for (int i = 0; i < productID.size(); i++) {
                         newString.append(productID.get(i)).append(" ");
@@ -220,7 +218,51 @@ public class OrderService {
                     System.out.println("Thank for ordering! Here is the details");
                     TableFormatterService orderConfirmedDisplay = new TableFormatterService(ProductService.getLabelFields());
                     for (ProductService product : ProductList) {
-                        if (!product.getProductID().equals(String.valueOf(repo.readOrderList().size() + 1))) continue;
+                        if (!product.getProductID().equals(pID)) continue;
+                        orderConfirmedDisplay.addRows(product.toProductRow());
+                    }
+                    orderConfirmedDisplay.display();
+                    System.out.println("The total products price is: " + productPrice);
+                    switch (membershipStatus) {
+                        case Membership.Platinum -> System.out.println("You got 15% discount as a " + Membership.Platinum + " member");
+                        case Membership.Gold -> System.out.println("You got 10% discount as a " + Membership.Gold + " member");
+                        case Membership.Silver -> System.out.println("You got 5% discount as a " + Membership.Silver + " member");
+                        case Membership.None -> System.out.println("You are not a VIP member, so that there is no discount");
+                    }
+                    System.out.println("The payment : " + totalPrice);
+                    break;
+                } else {
+                    isBuyMore = true;
+                    StringBuilder newString = new StringBuilder();
+                    for (int i = 0; i < productID.size(); i++) {
+                        newString.append(productID.get(i)).append(" ");
+                        newString.append(productQuantity.get(i).toString()).append(" ");
+                    }
+    
+                    // Get Discount
+                    for (MemberService Member : MemberList) {
+                        if (cusID.equals(Member.getMemberID())) {
+                            membershipStatus = Member.getMemberShip();
+                            productPrice = totalPrice;
+                            switch (membershipStatus) {
+                                case Membership.Platinum -> totalPrice -= totalPrice * 0.15;
+                                case Membership.Gold -> totalPrice -= totalPrice * 0.1;
+                                case Membership.Silver -> totalPrice -= totalPrice * 0.05;
+                            }
+                            break;
+                        }
+                    }
+    
+                    ArrayList<OrderService> newData = new ArrayList<>();
+                    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date = new Date();
+                    String strDate = dateFormat.format(date);
+                    newData.add(new OrderService(String.valueOf(repo.readOrderList().size() + 1), this.cusID, PaidStatus.Unpaid, newString.toString(), strDate, totalPrice));
+                    if (!isBuyMore) repo.writeIntoOrderFile(newData, true);
+                    System.out.println("Thank for ordering! Here is the details");
+                    TableFormatterService orderConfirmedDisplay = new TableFormatterService(ProductService.getLabelFields());
+                    for (ProductService product : ProductList) {
+                        if (!product.getProductID().equals(pID)) continue;
                         orderConfirmedDisplay.addRows(product.toProductRow());
                     }
                     orderConfirmedDisplay.display();
